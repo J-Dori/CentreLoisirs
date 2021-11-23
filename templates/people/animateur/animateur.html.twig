@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}ANIMATEURS{% endblock %}
+
+{% block body %}
+<div class="col-lg-10 col-md-12 m-auto">
+    {% if is_granted('ROLE_ADMIN') %}
+    <a class="btn btn-md btn-primary btn-add mb-3" href="{{ path('animateur_add') }}">Ajouter</a>
+    {% endif %}
+    <table class="tableList display w-100" data-order='[[ 0, "asc" ], [1, "asc"]]'>
+        <thead>
+            <tr>
+                <td style="max-width:200px">NOM</td>
+                <td style="max-width:200px">PRÉNOM</td>
+                <td class="text-center" style="min-width:100px; max-width:150px">MOBILE</td>
+                <td class="text-center" style="min-width:100px; max-width:150px">FIXE</td>
+                <td style="max-width:200px">E-MAIL</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td style="min-width:160px"></td>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for list in listing %}
+            <tr style="cursor:pointer" onclick="location.href='{{ path('animateur_profile', {'id':list.id}) }}'">
+                <td>{{ list.lname }}</td>
+                <td>{{ list.fname }}</td>
+                <td class="text-center">{{ list.phoneMob }}</td>
+                <td class="text-center">{{ list.phoneHome }}</td>
+                <td><a class="link-info" href="mailto:{{ list.email }}">{{ list.email }}</a></td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td class="text-center">
+                    <a class="btn btn-sm btn-warning btn-edit" href="{{ path('animateur_edit', {'id':list.id}) }}">Modifier</a>
+                    <a class="btn btn-sm btn-danger btn-del" 
+                        onclick="confirmDelete()" 
+                        data-text="{{ list }}"
+                        data-ctrl="l'animateur" href="{{ path('animateur_index', {'id':list.id}) }}">Supprimer</a>
+                </td>
+            {% endif %}
+            </tr>
+        {% else %}
+            <tr colspan="4" class="text-center"><td><h3>Aucune donnée enregistrée...</h3></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block tableScript  %}
+    <script src="{{ asset("js/tableScript.js") }}"></script>
+{% endblock %}
+
+{% endblock %}

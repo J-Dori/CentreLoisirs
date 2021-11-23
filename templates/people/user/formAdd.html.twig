@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block pageTitle %}AJOUTER UTILISATEUR{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Prénom et Nom :
+            <div class="input-group">
+                {{ form_widget(form.fname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.lname, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="mt-2">
+            E-mail :&ensp;{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.email) }}</div>
+        </div>
+        <div class="mt-2">
+            Mot de Passe (8 caractères) :&ensp;{{ form_widget(form.password.first, {'attr': {'class': 'form-control', 'style': 'width:200px'}}) }}
+        </div>
+        <div class="mt-2">
+            Répétez le Mot de Passe :&ensp;{{ form_widget(form.password.second, {'attr': {'class': 'form-control', 'style': 'width:200px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.password.first) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.password.second) }}</div>
+        </div>
+        <div class="my-2">
+            Nº Portable :&ensp;{{ form_widget(form.phoneMob, {'attr': {'class': 'form-control', 'style': 'width:200px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.phoneMob) }}</div>
+        </div>
+        <div class="my-2">
+            Rôles :
+            {% for role in form.roles %}
+                <div class="form-check form-switch mb-2">
+                    {{ form_widget(role, {attr: {'class': 'form-check-input'}}) }}
+                    {{ form_label(role, role, {attr: {'class': 'form-check-label'}}) }}
+                </div>
+            {% endfor %}
+            <div class="form-error text-center">{{ form_errors(form.roles) }}</div>
+        </div>
+        <div class="flex justify-content-between w-100">
+            <div class="registerBtt">
+                {# {{ form_row(form.agreeTerms, {'attr': {'class': 'form-check d-inline-block'}}) }} #}
+                <button class="btn btn-md btn-primary mt-2" type="submit">Enregistrer</button>
+            </div>
+            <div>
+                <a class="btn btn-md btn-danger mt-2" href="{{ path('user_index') }}">Annuler</a>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,199 @@
+* { 
+    box-sizing: border-box; 
+    font-family: 'Montserrat', sans-serif; 
+    scroll-behavior: smooth;
+    color: rgb(53, 53, 53);
+}
+
+body {
+    background-color: rgb(243, 243, 243);
+}
+
+p {
+    font-size: 1.2em;
+}
+
+.c-pointer {
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1400px;
+    padding-bottom: 3em;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+.navbar {
+    padding: 15px;
+}
+
+.navbar-username {
+    color: rgb(255, 255, 255) !important;
+    font-weight: 600;
+    margin-right: 1em;
+}
+
+.pageTitleBar {
+    height: 65px;
+    position: relative;
+    background-color: rgb(10, 77, 177);
+    box-shadow: 0px 3px 3px darkgrey;
+    border-top: 1px solid rgb(122, 168, 236);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageTitleBar h2 {
+    margin-top: 5px;
+    letter-spacing: 2px;
+}
+
+.alertMsg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 65px;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.5em;
+    box-shadow: 0px 3px 3px rgb(128, 128, 128);
+    opacity: 1;
+        -webkit-transition: opacity 1s ease-in-out;
+        transition: opacity 1s ease-in-out;
+    color: rgb(235, 235, 235);
+}
+
+.alertErr {
+    background-color: rgb(177, 6, 6);
+}
+
+.alertSuccess {
+    background-color: rgb(223, 163, 34);
+}
+
+.form-error > ul {
+    list-style: none;
+    padding: 0;
+}
+
+.form-error > ul li {
+    color: whitesmoke;
+    padding: 5px;
+    background-color: rgb(177, 6, 6);
+}
+
+.formPrice {
+    text-align: right;
+}
+
+.rateFormTableHeader th {
+    text-align: center;
+    font-weight: normal;
+}
+
+.btn-edit, .btn-del {
+    width: 80px;
+}
+
+.btn-sm-edit, .btn-sm-del {
+    width: 30px;
+}
+
+/* YEAR index page : fontAwesome color */
+.statusOpen {
+    color: rgb(0, 204, 0);
+}
+.statusClose {
+    color: rgb(119, 3, 3);
+}
+
+/* YEAR index - AgeGroup & Rate tables */
+
+.year-index-tbTitles {
+    padding: 10px;
+    background-color: rgb(209, 209, 209);
+    box-shadow: 2px 2px 4px rgb(68, 68, 68);
+    text-align: center;
+    margin: 3em 0 1em;
+}
+
+.year-index-tbAge {
+    max-width: 500px;
+    text-align: center;
+    margin: auto;
+}
+
+.yearError-arrayList {
+    max-width: 800px;
+    margin: 5em auto;
+    background-color: rgba(95, 172, 235, 0.664);
+    color: white;
+    padding: 3em;
+    box-shadow: 2px 2px 4px rgb(87, 87, 87);
+    text-align: center;
+    border-radius: 25px;
+}
+
+.yearError-arrayList h4 {
+    line-height: 1.5em;
+    color: rgb(70, 70, 70);
+}
+
+.yearError-arrayList a {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+/* ArrayList form */
+.arrayList-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+#rate-list, #week-list, #ageGroup-list, #typeContract-list {
+    padding: 1em;
+    margin: 1em;
+    border: 1px solid rgb(189, 189, 189);
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 2px 2px 6px grey;
+    flex: 1 auto;
+    max-width: 400px;
+}
+
+.arrayList-boxTitle-addBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    padding: 5px;
+}
+
+.arrayList-boxTitle-addBtn h3 {
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.arrayList-form-input-del-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 15px 0;
+}
+
+
+.arrayList-form-input-del-group p, .arrayList-form-input-del-group a {
+    display: inline;    
+    margin: 0 10px 0 0;
+}
+
+.arrayList-form-input-del-group p {
+    flex: 2 auto;
+}

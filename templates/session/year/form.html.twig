@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+
+{% if editMode == 'copy' %}
+    {% set yearStyle = 'max-width:75px; background-color: rgb(195, 227, 241);' %}
+    {% set habStyle = 'max-width:200px; background-color: rgb(195, 227, 241);' %}
+{% else %}
+    {% set yearStyle = 'max-width:75px;' %}
+    {% set habStyle = 'max-width:200px;' %}
+{% endif %}
+
+{% block pageTitle %}{{ setTitle }} ANNÉE{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Année &ensp;{{ form_widget(form.year, {'attr': {'class': 'form-control text-center', 'style': yearStyle }}) }}
+            <div class="form-error text-center">{{ form_errors(form.year) }}</div>
+        </div>
+        <div class="mt-2">
+            Prix Repas &ensp;{{ form_widget(form.priceMeal, {'attr': {'class': 'form-control formPrice', 'style': 'max-width:100px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.priceMeal) }}</div>
+        </div>
+        <div class="mt-2">
+            Prix Inscription &ensp;{{ form_widget(form.priceInscription, {'attr': {'class': 'form-control formPrice', 'style': 'max-width:100px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.priceInscription) }}</div>
+        </div>
+        <div class="mt-2">
+            Nº Habilitation &ensp;{{ form_widget(form.numHabilitation, {'attr': {'class': 'form-control', 'style': habStyle,}}) }}
+            <div class="form-error text-center">{{ form_errors(form.numHabilitation) }}</div>
+        </div>
+        
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button><br>
+        {% if editMode == 'copy' %}
+            <p class="mt-2"><strong>NOTE : </strong>Les Champs Prédéfinis seront égalment copiés</p> 
+        {% endif %}
+
+        <a class="btn btn-md btn-danger mt-3" href="{{ path('session_index') }}">Annuler</a>
+        
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

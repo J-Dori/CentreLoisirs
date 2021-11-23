@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}ENFANTS{% endblock %}
+
+{% block body %}
+<div class="col-lg-10 col-md-12 m-auto">
+    {% if is_granted('ROLE_ADMIN') %}
+    <a class="btn btn-md btn-primary btn-add mb-3" href="{{ path('children_add') }}">Ajouter</a>
+    {% endif %}
+    <table class="tableList display w-100" data-order='[[ 0, "asc" ], [1, "asc"]]'>
+        <thead>
+            <tr>
+                <td style="max-width:200px">NOM</td>
+                <td style="max-width:200px">PRÉNOM</td>
+                <td class="text-center" style="max-width:150px">DATE NAISSANCE</td>
+                <td class="text-center" style="max-width:150px">AGE</td>
+                <th class="text-center">PRÉCAUTONS</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td style="max-width:150px table-btn"></td>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for list in listing %}
+            <tr style="cursor:pointer" onclick="location.href='{{ path('children_profile', {'id':list.id}) }}'">
+                <td>{{ list.lname }}</td>
+                <td>{{ list.fname }}</td>
+                <td class="text-center">{{ list.birthday|date("d-m-Y") }}</td>
+                <td class="text-center">{{ list.getAge }}</td>
+                <td class="text-center">
+                    {% if list.medicalObs != null or list.allergyObs != null or list.foodObs != null %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td class="text-center">
+                    <a class="btn btn-sm btn-warning btn-edit" href="{{ path('children_edit', {'id':list.id}) }}">Modifier</a>
+                    <a class="btn btn-sm btn-danger btn-del" 
+                        onclick="confirmDelete()" 
+                        data-text="{{ list }}"
+                        data-ctrl="l'enfant" href="{{ path('children_index', {'id':list.id}) }}">Supprimer</a>
+                </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr class="text-center"><td><h3>Aucune donnée enregistrée...</h3></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block tableScript  %}
+    <script src="{{ asset("js/tableScript.js") }}"></script>
+{% endblock %}
+
+{% endblock %}

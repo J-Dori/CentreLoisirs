@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Responsables{% endblock %}
+{% block pageTitle %}RESPONSABLES{% endblock %}
+
+{% block body %}
+
+<div class="wrapper mx-auto col-lg-8 col-md-12">
+    <div class="col-md-12">
+        <h3 class="mb-3">{{ profile }}</h3>
+        <p><strong>Portable : </strong>{{ profile.phoneMob}}</p>
+        <p><strong>Fixe : </strong>{{ profile.phoneHome}}</p>
+        <p><strong>E-mail : </strong><a class="link-info" href="mailto:{{ profile.email}}">{{ profile.email}}</a></p>
+        <p><strong>Adresse : </strong>{{ profile.fullAddress}}</p>
+        <p><strong>Employeur : </strong>{{ profile.workName}}</p>
+        <p><strong>Nº Contact : </strong>{{ profile.workPhone}}</p>
+        {% if is_granted('ROLE_ADMIN') %}
+            <p><a class="btn btn-sm btn-warning btn-edit" href="{{ path('responsable_edit', {'id':profile.id, 'goBack':'responsable_profile'}) }}">Modifier</a></p>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="col-12 mt-4">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ENFANT</th>
+                    <th class="text-center">DATE NAISSANCE</th>
+                    <th class="text-center">AGE</th>
+                    <th class="text-center">PRÉCAUTIONS</th>
+                    <th class="text-center">ALLERGIES</th>
+                    <th class="text-center">RÉG. ALIMENTAIRE</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="table-btn" style="width: 80px"></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for children in profile.children %}
+                <tr style="cursor:pointer" onclick="location.href='{{ path('children_index', {'id':children.id}) }}'">
+                    <td>{{ children }}</td>
+                    <td class="text-center">{{ children.birthday|date("d-m-Y") }}</td>
+                    <td class="text-center">{{ children.getAge }}</td>
+                    <td class="text-center">{{ children.medicalObs != null ? "Oui" : "Non" }}</td>
+                    <td class="text-center">{{ children.allergyObs != null ? "Oui" : "Non" }}</td>
+                    <td class="text-center">{{ children.foodObs != null ? "Oui" : "Non" }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <td>
+                        <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('children_edit', {'id':children.id, 'goBack':'responsable_profile', 'goBackId':profile.id}) }}"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                        onclick="confirmDelete()" 
+                        data-text="{{ children }}"
+                        data-ctrl="le Responsable" href="{{ path('responsable_index', {'id':children.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                    <tr colspan="4" class="text-center"><td><h5>Aucune donnée enregistrée...</h5></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

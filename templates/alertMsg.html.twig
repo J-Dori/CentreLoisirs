@@ -1,0 +1,14 @@
+{% for message in app.flashes('error') %}
+    <div class="alertMsg alertErr">{{ message }}</div>
+{% endfor %}
+
+{% for message in app.flashes('success') %}
+    <div class="alertMsg alertSuccess">{{ message }}</div>
+{% endfor %}
+{% for message in app.flashes('confirm_del') %}
+    <div class="confirmMsg alertConfirm">
+        <p>Êtes-vous sûr de vouloir supprimer {{ message }} ?</p>
+            {# {% set ctrl =  'delete'~ctrl %}
+        <a href="{{ path('delete'~ctrl, {'id': getId} ) }}">Oui</a> #}
+    </div>
+{% endfor %}

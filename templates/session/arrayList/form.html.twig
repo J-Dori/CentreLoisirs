@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} LISTE DE CHAMPS PRÉDÉFINIS{% endblock %}
+
+{% block body %}
+    <div class="col-12">
+        {{ form_start(form) }}
+        <div class="arrayList-form">
+            {# ... #}
+            {# store the prototype on the data-prototype attribute #}
+            <div id="rate-list">
+                <div class="arrayList-boxTitle-addBtn">
+                    <h3>TARIFS</h3>
+                    <p><button type="button" title="Ajouter : Titre pour le Tarif" id="arrayList-addRate"
+                        class="add-another-collection-widget btn btn-md btn-primary"
+                        data-list-selector="#rateTitle-fields-list"><i class="fas fa-plus text-white"></i></button>
+                    </p> 
+                </div> 
+                <div id="rate-fields-list" class="form-flex"
+                        data-prototype="{{ form_widget(form.rateTitle.vars.prototype)|e }}"
+                        data-widget-counter="{{ form.rateTitle|length }}">
+                    {% for rate in form.rateTitle %}
+                        <div class="arrayList-form-input-del-group">
+                            {{ form_errors(rate) }}
+                            {{ form_widget(rate, {'attr': {'class': 'form-control'}}) }}
+                            <button class="removeBtn"><i class="far fa-trash-alt text-white"></i></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div id="ageGroup-list"
+                data-prototype="{{ form_widget(form.ageGroup.vars.prototype)|e }}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ form.ageGroup|length }}">
+                <div class="arrayList-boxTitle-addBtn">
+                    <h3>GROUPES D'ÂGE</h3>
+                    <p><button type="button" title="Ajouter : Group d'âge"
+                        class="add-another-collection-widget btn btn-md btn-primary"
+                        data-list-selector="#ageGroup-fields-list"><i class="fas fa-plus text-white"></i></button>
+                    </p> 
+                </div>
+                {% for ageGroupField in form.ageGroup %}
+                    <div class="arrayList-form-input-del-group">
+                        <p>
+                            {{ form_errors(ageGroupField) }}
+                            {{ form_widget(ageGroupField, {'attr': {'class': 'form-control'}}) }}
+                        </p>
+                        <a href="#" class="btn btn-sm btn-danger" title="Supprimer ligne" alt="X"><i class="far fa-trash-alt text-white"></i></a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="week-list"
+                data-prototype="{{ form_widget(form.weekType.vars.prototype)|e }}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ form.weekType|length }}">
+                <div class="arrayList-boxTitle-addBtn">
+                    <h3>SEMAINES</h3>
+                    <p><button type="button" title="Ajouter : Type de Semaine"
+                        class="add-another-collection-widget btn btn-md btn-primary"
+                        data-list-selector="#weekType-fields-list"><i class="fas fa-plus text-white"></i></button>
+                    </p> 
+                </div>
+                {% for weekField in form.weekType %}
+                    <div class="arrayList-form-input-del-group">
+                        <p>
+                            {{ form_errors(weekField) }}
+                            {{ form_widget(weekField, {'attr': {'class': 'form-control'}}) }}
+                        </p>
+                        <a href="#" class="btn btn-sm btn-danger" title="Supprimer ligne" alt="X"><i class="far fa-trash-alt text-white"></i></a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="typeContract-list"
+                data-prototype="{{ form_widget(form.typeContract.vars.prototype)|e }}"
+                data-widget-tags="{{ '<p></p>'|e }}"
+                data-widget-counter="{{ form.typeContract|length }}">
+                <div class="arrayList-boxTitle-addBtn">
+                    <h3>TYPES DE CONTRAT</h3>
+                    <p><button type="button" title="Ajouter : Type de Contrat"
+                        class="add-another-collection-widget btn btn-md btn-primary"
+                        data-list-selector="#typeContract-fields-list"><i class="fas fa-plus text-white"></i></button>
+                    </p> 
+                </div>
+                {% for typeContractField in form.typeContract %}
+                    <div class="arrayList-form-input-del-group">
+                        <p>
+                            {{ form_errors(typeContractField) }}
+                            {{ form_widget(typeContractField, {'attr': {'class': 'form-control'}}) }}
+                        </p>
+                        <a href="#" class="btn btn-sm btn-danger" title="Supprimer ligne" alt="X"><i class="far fa-trash-alt text-white"></i></a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="text-center m-auto mt-5">
+            <button type="submit" class="btn btn-lg btn-primary px-5">ENREGISTRER</button>
+        </div>
+        {# ... #}
+        {{ form_end(form) }}
+    </div>
+{# 
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('.add-another-collection-widget').click(function (e) {
+                var list = jQuery(jQuery(this).attr('data-list-selector'));
+                // Try to find the counter of the list or use the length of the list
+                var counter = list.data('widget-counter') || list.children().length;
+
+                // grab the prototype template
+                var newWidget = list.attr('data-prototype');
+                // replace the "__name__" used in the id and name of the prototype
+                // with a number that's unique to (ex:) Rate Titles
+                // end name attribute looks like name="array_list[rateTitle][2]"
+                newWidget = newWidget.replace(/__name__/g, counter);
+                // Increase the counter
+                counter++;
+                // And store it, the length cannot be used if deleting widgets is allowed
+                list.data('widget-counter', counter);
+
+                // create a new list element and add it to the list
+                var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
+                newElem.appendTo(list);
+            });
+        });
+    </script>
+ #}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            const button = document.querySelector('.add-another-collection-widget')
+            //on créé un élémént DOM button
+            var removeBtn = document.createElement("button")
+            //on lui ajoute la classe .removeBtn et du fontAwesome (trash)
+            removeBtn.classList.add("removeBtn")
+            removeBtn.innerHTML = "<i class='far fa-trash-alt text-white'></i>"
+            button.addEventListener("click", function (e) {
+                //on récupère l'id de la liste des questions stocké dans l'attribute data-list-selector du button 
+                var listId = button.getAttribute('data-list-selector')
+                //on récupère l'élément du DOM correspondant à cette id
+                var list = document.querySelector(listId)
+                //le compteur de questions c'est soit la valeur de l'attr data-widget-counter, soit le nombre de questions
+                //déjà présentes dans la liste (en cas d'edit)
+                var counter = list.dataset.widgetCounter || list.querySelectorAll(listId+">*").length
+                
+                // on récupère le HTML d'un form de question complet (data-prototype)
+                var newWidget = list.getAttribute('data-prototype')
+                // on remplace toute occurence de __name__ par un numéro unique, correspondant au compteur de
+                // questions de la liste
+                newWidget = newWidget.replace(/__name__/g, counter)
+                //on incrémente le compteur (vu qu'on vient d'ajouter une question)
+                counter++
+                //et on met à jour la valeur de l'attribute data-widget-counter
+                list.dataset.widgetCounter = counter
+                // on créé un nouvel élément DOM (une div ici)
+                var newElem = document.createElement("div")
+                newElem.classList.add("flex-form form-row")
+                //on remplit cet élément avec tout le HTML d'un formulaire de question (data-prototype)
+                newElem.innerHTML = newWidget
+                //on ajoute ce bouton en tant qu'enfant du formulaire de question
+                newElem.appendChild(removeBtn.cloneNode(true))
+                
+                //niveau DOM, on ajoute ce nouvel élément dans la liste
+                list.appendChild(newElem)
+                
+            });
+            //pour cibler les boutons supprimer, on récupère la liste complète
+            var wrapper = document.querySelector('#rate-fields-list')
+            var rates = document.querySelectorAll("#rate-fields-list>*")
+            rates.forEach(question => {
+                rate.appendChild(removeBtn.cloneNode(true))
+            });
+            //lorsqu'un clic survient dans la zone de la liste des questions
+            wrapper.addEventListener('click', function(e) {
+                e.preventDefault()
+                //on vérifie que la cible du clic est un bouton ayant la classe "remove-question"
+                if(e.target.classList.contains("removeBtn")){
+                    //on supprime l'élément parent de la cible du clic
+                    e.target.parentNode.remove()
+                }
+            })
+        })
+        
+    </script>
+{% endblock %}

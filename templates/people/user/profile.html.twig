@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+{% block pageTitle %}UTILISATEURS{% endblock %}
+
+{% block body %}
+
+<div class="wrapper mx-auto col-lg-8 col-md-12">
+    <h3 class="mb-3">{{ profile }}</h3>
+    <p><strong>Portable : </strong>{{ profile.phoneMob}}</p>
+    <p><strong>E-mail : </strong><a class="link-info" href="mailto:{{ profile.email }}">{{ profile.email }}</a></p>
+    <p><strong>Rôles : </strong>{{ profile.getRolesStr }}</p>
+    {% if app.user.id == profile.id %}
+        <p><a class="btn btn-primary btn-edit" style="width:200px" href="{{ path('responsable_edit', {'id':profile.id, 'goBack':'responsable_profile'}) }}">Modifier Mot de Pass</a></p>
+    {% endif %}
+    {% if app.user.id == profile.id or is_granted('ROLE_ADMIN') %}
+        <p><a class="btn btn-sm btn-warning btn-edit" style="width:200px" href="{{ path('responsable_edit', {'id':profile.id, 'goBack':'responsable_profile'}) }}">Modifier les données</a></p>
+    {% endif %}
+</div>
+
+{% endblock %}

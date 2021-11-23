@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} TARIFS{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Description &ensp;{{ form_widget(form.title, {'attr': {'class': 'form-select text-center', 'style': 'max-width:250px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.title) }}</div>
+        </div>
+        
+
+        <div class="mt-3 rateFormTableHeader">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="max-width: 100px">Enfant 1</th>
+                        <th style="max-width: 100px">Enfant 2</th>
+                        <th style="max-width: 100px">Enfant 3</th>
+                        <th style="max-width: 100px">Enfant 4</th>
+                        <th style="max-width: 100px">Enfant 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ form_widget(form.child1, {'attr': {'class': 'form-control formPrice'}}) }}</td>
+                        <td>{{ form_widget(form.child2, {'attr': {'class': 'form-control formPrice'}}) }}</td>
+                        <td>{{ form_widget(form.child3, {'attr': {'class': 'form-control formPrice'}}) }}</td>
+                        <td>{{ form_widget(form.child4, {'attr': {'class': 'form-control formPrice'}}) }}</td>
+                        <td>{{ form_widget(form.child5, {'attr': {'class': 'form-control formPrice'}}) }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center" colspan="5">
+                            {{ form_errors(form.child1) }}
+                            {{ form_errors(form.child2) }}
+                            {{ form_errors(form.child3) }}
+                            {{ form_errors(form.child4) }}
+                            {{ form_errors(form.child5) }}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" href="{{ path('year_index', {'id': form.year.vars.value}) }}">Annuler</a>
+
+        <div class="mt-2">
+            {{ form_widget(form.year, {'attr': {'class': 'form-control', 'style': 'visibility:hidden',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.year) }}</div>
+        </div>
+        
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

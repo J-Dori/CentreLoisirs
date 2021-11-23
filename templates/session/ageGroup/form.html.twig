@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} GROUPE D'ÂGES{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-4 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Groupe d'âge &ensp;{{ form_widget(form.ageGroup, {'attr': {'class': 'form-select text-center', 'style': 'max-width:150px',}}) }}
+            <small><strong>Ex:</strong> &lt; 05 <strong>ou</strong> 06 - 09</small>
+            <div class="form-error text-center">{{ form_errors(form.ageGroup) }}</div>
+        </div>
+        
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" href="{{ path('year_index', {'id': form.year.vars.value}) }}">Annuler</a>
+        
+        <div class="mt-2">
+            {{ form_widget(form.year, {'attr': {'class': 'form-control', 'style': 'visibility:hidden',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.year) }}</div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

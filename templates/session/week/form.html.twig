@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} SEMAINES{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Semaine Nº &ensp;{{ form_widget(form.weekNum, {'attr': {'class': 'form-control text-center', 'style': 'max-width:50px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.weekNum) }}</div>
+        </div>
+        <div class="mt-2">
+            Thème &ensp;{{ form_widget(form.theme, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.theme) }}</div>
+        </div>
+        <div class="mt-2">
+            Date début &ensp;{{ form_widget(form.dateStart, {'attr': {'class': 'form-control text-center', 'style': 'max-width:150px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.dateStart) }}</div>
+        </div>
+        <div class="mt-2">
+            Date fin &ensp;{{ form_widget(form.dateEnd, {'attr': {'class': 'form-control text-center', 'style': 'max-width:150px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.dateEnd) }}</div>
+        </div>
+        <div class="mt-2">
+            Type de semaine &ensp;{{ form_widget(form.weekType, {'attr': {'class': 'form-select', 'style': 'max-width:250px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.weekType) }}</div>
+        </div>
+        
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" href="{{ path('year_index', {'id': form.year.vars.value}) }}">Annuler</a>
+
+        <div class="mt-2">
+            {{ form_widget(form.year, {'attr': {'class': 'form-control', 'style': 'visibility:hidden',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.year) }}</div>
+        </div>
+        
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

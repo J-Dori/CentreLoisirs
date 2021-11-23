@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Responsables{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} RESPONSABLE{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Responsable :
+            {{ form_widget(form.relation, {'attr': {'class': 'form-select text-center', 'style': 'width:100px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.relation) }}</div>
+        </div>
+        <div class="mt-2">
+            Prénom et Nom :
+            <div class="input-group">
+                {{ form_widget(form.title, {'attr': {'class': 'form-select  text-center', 'style': 'max-width:100px'}}) }}
+                {{ form_widget(form.fname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.lname, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-error text-center">{{ form_errors(form.title) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.fname) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.lname) }}</div>
+        </div>
+        <div class="mt-2">
+            Adresse :&ensp;{{ form_widget(form.address, {'attr': {'class': 'form-control mb-2'}}) }}
+            CP / Ville :
+            <div class="input-group">
+                {{ form_widget(form.cp, {'attr': {'class': 'form-control  text-center', 'style': 'max-width:100px'}}) }}
+                {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-error text-center">{{ form_errors(form.address) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.cp) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.city) }}</div>
+        </div>
+        <div class="mt-2">
+            E-mail :&ensp;{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.email) }}</div>
+        </div>
+        <div class="my-2">
+            Nº Portable :&ensp;{{ form_widget(form.phoneMob, {'attr': {'class': 'form-control text-center', 'style': 'width:150px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.phoneMob) }}</div>
+        </div>
+        <div class="my-2">
+            Nº Fixe :&ensp;{{ form_widget(form.phoneHome, {'attr': {'class': 'form-control text-center', 'style': 'width:150px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.phoneHome) }}</div>
+        </div>
+        <div class="mt-2">
+            Employeur :&ensp;{{ form_widget(form.workName, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.workName) }}</div>
+        </div>
+        <div class="my-2">
+            Nº Contact :&ensp;{{ form_widget(form.workPhone, {'attr': {'class': 'form-control text-center', 'style': 'width:150px'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.workPhone) }}</div>
+        </div>
+        <button class="btn btn-md btn-primary mt-2" type="submit">Enregistrer</button>
+        {% if goBack == null %}
+            <a class="btn btn-md btn-danger mt-2" href="{{ path('responsable_index') }}">Annuler</a>
+        {% else %}
+            <a class="btn btn-md btn-danger mt-2" href="{{ path(goBack, {'id':goBackId}) }}">Annuler</a>
+        {% endif %}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

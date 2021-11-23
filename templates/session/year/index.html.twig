@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}SESSIONS : ANNÉE{% endblock %}
+
+{% if year.status %}
+    {% set yearStatus = "statusOpen" %}
+{% else %}
+    {% set yearStatus = "statusClose" %}
+{% endif %}
+
+{% block body %}
+<div class="wrapper mx-auto col-lg-10 col-md-12">
+    <div class="col-12 mb-5">
+        <h2 class="mb-3"><a href="#" title="Ouvrir/Fermer Session"><i class="fas fa-circle {{ yearStatus }}"></i></a>&emsp;{{ year.year }}</h2>
+        <p><strong>Prix Repas : </strong>{{ year.priceMeal|number_format(2, ',', ' ') }} Eur</p>
+        <p><strong>Prix Inscription : </strong>{{ year.priceInscription|number_format(2, ',', ' ') }} Eur</p>
+        <p><strong>Nº Habilitation : </strong>{{ year.numHabilitation }}</p>
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if arrayList|length > 0 %}
+                <a class="btn btn-md btn-primary btn-add my-3" href="{{ path('arrayList', {'id':year.id}) }}">Liste de Champs Prédéfinis</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    
+    {% if arrayList|length == 0 %}
+        <div class="yearError-arrayList">
+            <h3>Veuillez définir, au préalable, les valeurs prédéfinies pour les :</h3>
+            <h4>Type de Semaine<br>Groupe d'Âge<br>Tarifs<br>Type de Contrat (Animateurs)</h4>
+            <a class="btn btn-lg btn-primary btn-add my-4" href="{{ path('arrayList_add', {'id':year.id}) }}">AJOUTER</a>
+        </div>
+    {% else %}
+    <div id="tb-YearDetails" class="wrapper">
+        <div id="tb-YearWeeks" class="col-12">
+            <div class="year-index-tbTitles w-100"><h4>SEMAINES</h4></div>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center" style="width: 75px">SEM Nº</th>
+                        <th>THÈME</th>
+                        <th class="text-center" style="max-width: 150px">DATE DÉBUT</th>
+                        <th class="text-center" style="max-width: 150px">DATE FIN</th>
+                        <th class="text-center">TYPE</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('week_add', {'id':year.id}) }}"><i class="fas fa-plus text-white"></i></a></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for weeks in weeksList %}
+                    <tr>
+                        <td class="text-center">{{ weeks.weekNum }}</td>
+                        <td>{{ weeks.theme }}</td>
+                        <td class="text-center">{{ weeks.dateStart|date("d-m-Y") }}</td>
+                        <td class="text-center">{{ weeks.dateEnd|date("d-m-Y") }}</td>
+                        <td class="text-center">{{ weeks.weekType }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('week_edit', {'id':weeks.id, 'year':year.id}) }}"><i class="far fa-edit"></i></a>
+                            <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            onclick="confirmDelete()" 
+                            data-text="{{ weeks.weekNum ~ " : " ~ weeks.theme }}"
+                            data-ctrl="la Semaine nº" href="{{ path('year_index', {'id':year.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                        <tr class="text-center"><td colspan="5"><h5>Aucune donnée enregistrée...</h5></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sessionAge">
+            <div class="year-index-tbTitles w-100"><h4>GROUPES D'ÂGES</h4></div>
+            <table class="table table-hover year-index-tbAge">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center" style="max-width: 200px">GROUPE D'ÂGE</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('ageGroup_add', {'id':year.id}) }}"><i class="fas fa-plus text-white"></i></a></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ages in ageList %}
+                    <tr>
+                        <td class="text-center">{{ ages.ageGroup }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('ageGroup_edit', {'id':ages.id, 'year':year.id}) }}"><i class="far fa-edit"></i></a>
+                            <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            onclick="confirmDelete()" 
+                            data-text="{{ ages.ageGroup }}"
+                            data-ctrl="le Groupe d'âge" href="{{ path('year_index', {'id':year.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                        <tr class="text-center"><td colspan="5"><h5>Aucune donnée enregistrée...</h5></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="sessionRate">
+            <div class="year-index-tbTitles w-100"><h4>TARIFS</h4></div>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center" style="max-width: 250px">DESCRIPTION</th>
+                        <th class="text-center" style="max-width: 100px">ENFANT 1</th>
+                        <th class="text-center" style="max-width: 100px">ENFANT 2</th>
+                        <th class="text-center" style="max-width: 100px">ENFANT 3</th>
+                        <th class="text-center" style="max-width: 100px">ENFANT 4</th>
+                        <th class="text-center" style="max-width: 100px">ENFANT 5</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('rate_add', {'id':year.id}) }}"><i class="fas fa-plus text-white"></i></a></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rates in rateList %}
+                    <tr>
+                        <td class="text-center">{{ rates.title }}</td>
+                        <td class="text-center">{{ rates.child1|number_format(2, ',', ' ') }}</td>
+                        <td class="text-center">{{ rates.child2|number_format(2, ',', ' ') }}</td>
+                        <td class="text-center">{{ rates.child3|number_format(2, ',', ' ') }}</td>
+                        <td class="text-center">{{ rates.child4|number_format(2, ',', ' ') }}</td>
+                        <td class="text-center">{{ rates.child5|number_format(2, ',', ' ') }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('rate_edit', {'id':rates.id, 'year':year.id}) }}"><i class="far fa-edit"></i></a>
+                            <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            onclick="confirmDelete()" 
+                            data-text="{{ rates.title }}"
+                            data-ctrl="le tarif" href="{{ path('year_index', {'id':year.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                        <tr class="text-center"><td colspan="8"><h5>Aucune donnée enregistrée...</h5></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

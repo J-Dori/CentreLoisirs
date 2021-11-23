@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        {% set logoLink = app.user ? 'home' : 'app_login' %}
+        <h5><a class="navbar-brand" href="{{ path(logoLink) }}">ACCUEIL</a></h5>
+        {% if app.user %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav"  aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex justify-content-between" id="main_nav">
+            <ul class="navbar-nav">
+                <a class="nav-link" href="{{ path('home') }}">INSCRIPTIONS</a>                    
+                <li class="nav-item dropdown" id="myDropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">DONNÉES&ensp;</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('responsable_index') }}">Responsables</a></li>
+                        <li><a class="dropdown-item" href="{{ path('children_index') }}">Enfants</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="{{ path('animateur_index') }}">Animateurs</a></li>
+                        <hr>
+                        <li><a class="dropdown-item" href="{{ path('user_index') }}">Utilisateurs</a></li>
+                    </ul>
+                </li>
+                <a class="nav-link" href="{{ path('session_index') }}">SESSIONS</a>
+            </ul>
+            {% endif %}
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <span class="nav-link navbar-username">Bonjour {{ app.user.fname }}</span>
+                    <a class="nav-link" href="{{ path('app_logout') }}">DÉCONNECTER</a>
+                {% else %}
+                    <a class="nav-link" href="{{ path('app_login') }}">CONNEXION</a>
+                {% endif %}
+            </ul>
+        </div>
+    <!-- navbar-collapse.// -->
+    </div>
+<!-- container-fluid.// -->
+</nav>

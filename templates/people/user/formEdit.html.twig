@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} UTILISATEUR{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Prénom et Nom :
+            <div class="input-group">
+                {{ form_widget(form.fname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.lname, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="mt-2">
+            E-mail :&ensp;{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.email) }}</div>
+        </div>
+        <div class="my-2" style="width:150px">
+            Nº Portable :&ensp;{{ form_widget(form.phoneMob, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.phoneMob) }}</div>
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="my-2">
+            Rôles :
+            {% for role in form.roles %}
+                <div class="form-check form-switch mb-2">
+                    {{ form_widget(role, {attr: {'class': 'form-check-input'}}) }}
+                    {{ form_label(role, role, {attr: {'class': 'form-check-label'}}) }}
+                </div>
+            {% endfor %}
+            <div class="form-error text-center">{{ form_errors(form.roles) }}</div>
+        </div>
+        {% endif %}
+        <button class="btn btn-md btn-primary mt-2" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-2" href="{{ path('user_index') }}">Annuler</a>
+    </div>
+{{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}SESSIONS{% endblock %}
+
+{% block body %}
+<div class="col-lg-10 col-md-12 m-auto">
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-md btn-primary btn-add mb-5" href="{{ path('year_add') }}">Ajouter Session</a>
+    {% endif %}
+    <table class="tableList display w-100" data-order='[[ 0, "desc" ]]'>
+        <thead>
+            <tr>
+                <td class="text-center" style="max-width:60px">ANNÉE</td>
+                <td class="text-center">Nº HABILITATION</td>
+                <td class="text-center" style="max-width:100px">SEMAINES</td>
+                <td class="text-center" style="max-width:120px">INSCRIPTIONS</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td style="max-width:200px table-btn"></td>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for list in listing %}
+            <tr style="cursor:pointer" onclick="location.href='{{ path('year_index', {'id':list.id}) }}'">
+                {% if list.status %}
+                    {% set yearStatus = "statusOpen" %}
+                {% else %}
+                    {% set yearStatus = "statusClose" %}
+                {% endif %}
+                <td class="text-left"><i class="fas fa-circle {{ yearStatus }}"></i>&ensp;{{ list.year }}</td>
+                <td class="text-center">{{ list.numHabilitation }}</td>
+                <td class="text-center">{{ list.weeks|length }}</td>
+                <td class="text-center"></td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td class="text-center">
+                    <a class="btn btn-sm btn-warning btn-edit" href="{{ path('year_edit', {'id':list.id}) }}">Modifier</a>
+                    <a class="btn btn-sm btn-danger btn-del" 
+                        onclick="confirmDelete()" 
+                        data-text="{{ list.year }}"
+                        data-ctrl="l'enfant" href="{{ path('year_index', {'id':list.id}) }}">Supprimer</a>
+                    <a class="btn btn-sm btn-link" href="{{ path('year_copy', {'id':list.id}) }}" title="Copier les données"><i class="far fa-copy fa-2x"></i></a>
+                </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr class="text-center"><td><h3>Aucune donnée enregistrée...</h3></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block tableScript  %}
+    <script src="{{ asset("js/tableScript.js") }}"></script>
+{% endblock %}
+{% endblock %}

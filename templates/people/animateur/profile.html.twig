@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animateurs{% endblock %}
+{% block pageTitle %}ANIMATEURS{% endblock %}
+
+{% block body %}
+
+<div class="wrapper mx-auto col-lg-8 col-md-12">
+    <div class="col-md-12">
+        <h3 class="mb-3">{{ profile }}</h3>
+        <p><strong>Date Naissance : </strong>
+            {{ profile.birthday|date("d-m-Y") ~ " : " ~ profile.getAge() ~ " ans (" ~ profile.birthCity ~ ")" }}
+        </p>
+        <p><strong>Portable : </strong>{{ profile.phoneMob}}</p>
+        <p><strong>Fixe : </strong>{{ profile.phoneHome}}</p>
+        <p><strong>E-mail : </strong><a class="link-info" href="mailto:{{ profile.email}}">{{ profile.email}}</a></p>
+        <p><strong>Adresse : </strong>{{ profile.fullAddress}}</p>
+        <p><strong>Nº Sécurité Social : </strong>{{ profile.numSS}}</p>
+        <br>
+        <p><strong>Notes : </strong>{{ profile.notes}}</p>
+        <p><a class="btn btn-sm btn-warning btn-edit" href="{{ path('animateur_edit', {'id':profile.id, 'goBack':'animateur_profile'}) }}">Modifier</a></p>
+    </div>
+
+    <div class="w-100 mt-4">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center">ANNÉE</th>
+                    <th class="text-center">TYPE CONTRACT</th>
+                    <th class="text-center">RÉNUMÉRATION</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contract in profile.animateurContracts %}
+                <tr>
+                    <td class="text-center">{{ contract.year.getYear() }}</td>
+                    <td class="text-center">{{ contract.typeContract }}</td>
+                    <td class="text-center">{{ contract.salary|number_format(2, ',', ' ')  }}</td>
+                </tr>
+                {% else %}
+                    <tr class="text-center"><td colspan="4"><h5>Aucune donnée enregistrée...</h5></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

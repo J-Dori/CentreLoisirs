@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block pageTitle %}RESPONSABLES{% endblock %}
+
+{% block body %}
+<div class="col-lg-10 col-md-12 m-auto">
+    <a class="btn btn-md btn-primary btn-add mb-3" href="{{ path('responsable_add') }}">Ajouter</a>
+    <table class="tableList display w-100 mb-3 mt-5" data-order='[[ 0, "asc" ], [1, "asc"]]'>
+        <thead>
+            <tr>
+                <td style="max-width:200px">NOM</td>
+                <td style="max-width:200px">PRÉNOM</td>
+                <td class="text-center" style="min-width:100px; max-width:150px">MOBILE</td>
+                <td class="text-center" style="min-width:100px; max-width:150px">FIXE</td>
+                <td style="max-width:150px table-btn"></td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for list in listing %}
+            <tr style="cursor:pointer" onclick="location.href='{{ path('responsable_profile', {'id':list.id}) }}'">
+                <td>{{ list.lname }}</td>
+                <td>{{ list.fname }}</td>
+                <td class="text-center">{{ list.phoneMob }}</td>
+                <td class="text-center">{{ list.phoneHome }}</td>
+                <td class="text-center">
+                    <a class="btn btn-sm btn-warning btn-edit" href="{{ path('responsable_edit', {'id':list.id}) }}">Modifier</a>
+                    <a class="btn btn-sm btn-danger btn-del"
+                        onclick="confirmDelete()" 
+                        data-text="{{ list }}"
+                        data-ctrl="le Responsable" href="{{ path('responsable_index', {'id':list.id}) }}">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr colspan="4" class="text-center"><td><h3>Aucune donnée enregistrée...</h3></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% block tableScript  %}
+    <script src="{{ asset("js/tableScript.js") }}"></script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enfants{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} ENFANT{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Sexe :&ensp;{{ form_widget(form.sex, {'attr': {'class': 'form-select', 'style': 'max-width:100px',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.sex) }}</div>
+        </div>
+        <div class="mt-2">
+            Prénom et Nom :
+            <div class="input-group">
+                {{ form_widget(form.fname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.lname, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-error text-center">{{ form_errors(form.fname) }}</div>
+            <div class="form-error text-center">{{ form_errors(form.lname) }}</div>
+        </div>
+        <div class="mt-2">
+            Date Naissance :&ensp;{{ form_widget(form.birthday, {'attr': {'class': 'form-control', 'style': 'max-width:200px'}}) }}
+            <span id="ageToday">
+                {% if editMode %}&emsp;{{ age }} ans{% endif %}
+            </span>
+            <div class="form-error text-center">{{ form_errors(form.birthday) }}</div>
+        </div>
+        <hr class="my-3">
+        <h3 class="my-2 text-center">Précautions / Régimes</h3>
+        <div class="my-2">
+            Médical :&ensp;{{ form_widget(form.medicalObs, {'attr': {'class': 'form-control', 'rows':'3'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.medicalObs) }}</div>
+        </div>
+        <div class="my-2">
+            Allergies :&ensp;{{ form_widget(form.allergyObs, {'attr': {'class': 'form-control', 'rows':'3'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.allergyObs) }}</div>
+        </div>
+        <div class="my-2">
+            Alimentaire :&ensp;{{ form_widget(form.foodObs, {'attr': {'class': 'form-control', 'rows':'3'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.foodObs) }}</div>
+        </div>
+        <button class="btn btn-md btn-primary mt-2" type="submit">Enregistrer</button>
+        {% if goBack == null %}
+            <a class="btn btn-md btn-danger mt-2" href="{{ path('children_index') }}">Annuler</a>
+        {% else %}
+            <a class="btn btn-md btn-danger mt-2" href="{{ path(goBack, {'id':goBackId}) }}">Annuler</a>
+        {% endif %}
+    </div>
+    {{ form_end(form) }}
+
+    <script src="{{ asset("js/moment.js") }}"></script>
+    <script type="text/javascript">
+
+        formChildrenAge = document.querySelector("#children_birthday")
+        ageToday = document.querySelector("#ageToday")
+        formChildrenAge.addEventListener("focusout", () => {
+            ageToday.innerHTML = ""
+            var startDate = formChildrenAge.value
+            var years = moment().diff(startDate, 'years', false);
+            ageToday.innerHTML = "&emsp;" + years + " ans"
+        })
+    </script>
+{% endblock %}

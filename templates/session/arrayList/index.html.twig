@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% block pageTitle %}LISTE DE CHAMPS PRÉDÉFINIS{% endblock %}
+
+{% block body %}
+    <div class="arrayList-index">
+        <h2>ANNÉE : {{arrayList.year.year}}</h2>
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center" style="max-width: 250px">DESCRIPTION TARIFS</th>
+                    <th class="text-center" style="max-width: 250px">GROUPES D'ÂGES</th>
+                    <th class="text-center" style="max-width: 250px">TYPES DE SEMAINE</th>
+                    <th class="text-center" style="max-width: 250px">TYPES DE CONTRAT</th>
+                    <th class="text-center table-btn" style="width: 80px">
+                        {% if arrayList|length == 0 %}
+                        <a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('arrayList_add', {'id':arrayList.year.id }) }}"><i class="fas fa-plus text-white"></i></a>
+                        {% endif %}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        {% for list in arrayList.rateTitle %}
+                            {{ list }}<br>
+                        {% endfor %}
+                    </td>
+                    <td class="text-center">
+                        {% for list in arrayList.ageGroup %}
+                            {{ list }}<br>
+                        {% endfor %}
+                    </td>
+                    <td class="text-center">
+                        {% for list in arrayList.weekType %}
+                            {{ list }}<br>
+                        {% endfor %}
+                    </td>
+                    <td class="text-center">
+                        {% for list in arrayList.typeContract %}
+                            {{ list }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('rate_edit', {'id':arrayList.id, 'year':arrayList.year.id}) }}"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                        onclick="confirmDelete()" 
+                        data-text="{{ arrayList.year.year }}"
+                        data-ctrl="la list des Tarifs de " href="{{ path('year_index', {'id':arrayList.year.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
