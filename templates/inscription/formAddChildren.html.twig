@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscriptions{% endblock %}
+
+{% block pageTitle %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-xl-6 col-lg-8 col-md-12">
+        <div class="form-row">
+            <div class="mt-2">
+                <p>Enfant &ensp;{{ form_widget(form.children, {'attr': {'class': 'form-select'}}) }}
+                </p>
+            </div>
+            <div class="mt-2">
+                Semaine &ensp;{{ form_widget(form.week, {'attr': {'class': 'form-select'}}) }}
+            </div>
+            <div class="mt-2">
+                Group d'âge &ensp;{{ form_widget(form.ageGroup, {'attr': {'class': 'form-select', 'style': 'max-width:200px',}}) }}
+            </div>
+            <div class="mt-2">
+                Repas &ensp;{{ form_widget(form.withMeal, {'attr': {'class': 'form-select', 'style': 'max-width:100px',}}) }}
+            </div>
+            <div class="my-3">
+                <button class="btn btn-md btn-primary" type="submit">Enregistrer</button>
+                <a class="btn btn-md btn-danger" href="{{ path('inscription_edit',{'id': inscID}) }}">Annuler</a>
+            </div>
+            <div class="form-error my-3">
+                {{ form_errors(form.children) }}
+                {{ form_errors(form.week) }}
+                {{ form_errors(form.ageGroup) }}
+                {{ form_errors(form.withMeal) }}
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

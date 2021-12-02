@@ -51,7 +51,8 @@
     </table>
 </div>
 
-{% block tableScript  %}
+{% block javascripts  %}
+    {{ parent() }}
     <script src="{{ asset("js/tableScript.js") }}"></script>
 {% endblock %}
 

@@ -18,6 +18,7 @@ class Responsable
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @ORM\OrderBy({"lname" = "ASC", "fname" = "ASC"})
      */
     private $id;
 
@@ -33,12 +34,12 @@ class Responsable
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @ORM\OrderBy({"lname" = "ASC", "fname" = "ASC"})
      */
     private $lname;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @ORM\OrderBy({"fname" = "ASC", "lname" = "ASC"})
      */
     private $fname;
 
@@ -294,18 +295,6 @@ class Responsable
         return $this;
     }
 
-
-
-    public function __toString()
-    {
-        return $this->title ." ". ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
-    }
-
-    public function fullAddress()
-    {
-        return $this->address ." | ". $this->cp ." ". $this->city;
-    }
-
     /**
      * @return Collection|Inscription[]
      */
@@ -334,6 +323,24 @@ class Responsable
         }
 
         return $this;
+    }
+
+ 
+/*****************************************************************************************************************/
+    public function __toString()
+    {
+        return mb_strtoupper($this->lname) .", ". ucfirst($this->fname);
+    }
+
+    public function fullName()
+    {
+        //name Title (Mme/Mr)
+        return $this->title ." ". $this->title ." ". ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
+    }
+
+    public function fullAddress()
+    {
+        return $this->address ." | ". $this->cp ." ". $this->city;
     }
 
 }

@@ -10,28 +10,39 @@
 
 {% block body %}
 <div class="wrapper mx-auto col-lg-10 col-md-12">
-    <div class="col-12 mb-5">
-        <h2 class="mb-3"><a href="#" title="Ouvrir/Fermer Session"><i class="fas fa-circle {{ yearStatus }}"></i></a>&emsp;{{ year.year }}</h2>
-        <p><strong>Prix Repas : </strong>{{ year.priceMeal|number_format(2, ',', ' ') }} Eur</p>
-        <p><strong>Prix Inscription : </strong>{{ year.priceInscription|number_format(2, ',', ' ') }} Eur</p>
-        <p><strong>Nº Habilitation : </strong>{{ year.numHabilitation }}</p>
-        {% if is_granted('ROLE_ADMIN') %}
-            {% if arrayList|length > 0 %}
-                <a class="btn btn-md btn-primary btn-add my-3" href="{{ path('arrayList', {'id':year.id}) }}">Liste de Champs Prédéfinis</a>
+    <div class="flex-wrap flex-justifyBetween">
+        <div>
+            <h2 class="mb-3"><a href="{{ path('session_activeYear', {'id':year.id, 'back':'year'}) }}" title="Ouvrir/Fermer Session"><i class="fas fa-circle {{ yearStatus }}"></i></a>&emsp;{{ year.year }}</h2>
+            <p><strong>Prix Repas : </strong>{{ year.priceMeal|number_format(2, ',', ' ') }} Eur</p>
+            <p><strong>Prix Inscription : </strong>{{ year.priceInscription|number_format(2, ',', ' ') }} Eur</p>
+            <p><strong>Nº Habilitation : </strong>{{ year.numHabilitation }}</p>
+            {% if is_granted('ROLE_ADMIN') %}
+                {% if arrayList|length > 0 %}
+                    <a class="btn btn-md btn-primary btn-add my-3" href="{{ path('arrayList', {'id':year.id}) }}">Liste de Champs Prédéfinis</a>
+                {% endif %}
             {% endif %}
-        {% endif %}
+        </div>
+        <div id="session_index_resume">
+            <h3 class="text-center">Résumé</h3>
+            <hr>
+            <p><strong>Semaines : </strong>{{ weeksList|length }}</p>
+            <p><strong>Groupes d'âges : </strong>{{ ageList|length }}</p>
+            <p><strong>Tarifs : </strong>{{ rateList|length }}</p>
+            <p><strong>Contrats : </strong>{{ contractList|length }}</p>
+            <p><strong>Inscriptions : </strong>{{ year.inscriptions|length }}</p>
+        </div>
     </div>
     
     {% if arrayList|length == 0 %}
         <div class="yearError-arrayList">
-            <h3>Veuillez définir, au préalable, les valeurs prédéfinies pour les :</h3>
-            <h4>Type de Semaine<br>Groupe d'Âge<br>Tarifs<br>Type de Contrat (Animateurs)</h4>
+            <h3>Veuillez fixer, au préalable, les valeurs prédéfinies pour les :</h3>
+            <h4>Types de Semaine<br>Groupes d'Âge<br>Tarifs<br>Types de Contrat</h4>
             <a class="btn btn-lg btn-primary btn-add my-4" href="{{ path('arrayList_add', {'id':year.id}) }}">AJOUTER</a>
         </div>
     {% else %}
     <div id="tb-YearDetails" class="wrapper">
         <div id="tb-YearWeeks" class="col-12">
-            <div class="year-index-tbTitles w-100"><h4>SEMAINES</h4></div>
+            <div class="year-index-tbTitles w-100"><h4>SEMAINES&ensp;({{ weeksList|length }})</h4></div>
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -39,6 +50,7 @@
                         <th>THÈME</th>
                         <th class="text-center" style="max-width: 150px">DATE DÉBUT</th>
                         <th class="text-center" style="max-width: 150px">DATE FIN</th>
+                        <th class="text-center" style="max-width: 50px">JOURS</th>
                         <th class="text-center">TYPE</th>
                         {% if is_granted('ROLE_ADMIN') %}
                         <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('week_add', {'id':year.id}) }}"><i class="fas fa-plus text-white"></i></a></th>
@@ -52,6 +64,7 @@
                         <td>{{ weeks.theme }}</td>
                         <td class="text-center">{{ weeks.dateStart|date("d-m-Y") }}</td>
                         <td class="text-center">{{ weeks.dateEnd|date("d-m-Y") }}</td>
+                        <td class="text-center">{{ weeks.countDays }}</td>
                         <td class="text-center">{{ weeks.weekType }}</td>
                         {% if is_granted('ROLE_ADMIN') %}
                         <td>
@@ -141,6 +154,47 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="sessionContract">
+            <div class="year-index-tbTitles w-100"><h4>CONTRATS ANIMATEURS</h4></div>
+            {% if ageList|length == 0 %}
+                <h5 class="text-center">Pour ajouter un contrat, vous devez d'abord créer la liste Groupes d'âges.</h5>
+            {% else %}
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ANIMATEUR</th>
+                        <th class="text-center">GROUP D'ÂGE</th>
+                        <th class="text-center">TYPE CONTRACT</th>
+                        <th class="text-center">RÉNUMÉRATION</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('contract_add', {'id':year.id}) }}"><i class="fas fa-plus text-white"></i></a></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contract in contractList %}
+                    <tr>
+                        <td>{{ contract.animateur }}</td>
+                        <td class="text-center">{{ contract.ageGroup }}</td>
+                        <td class="text-center">{{ contract.typeContract }}</td>
+                        <td class="text-center">{{ contract.salary|number_format(2, ',', ' ')  }} Eur</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('contract_edit', {'id':contract.id, 'year':year.id}) }}"><i class="far fa-edit"></i></a>
+                            <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            onclick="confirmDelete()" 
+                            data-text="{{ contract.animateur }}"
+                            data-ctrl="le contrat de" href="{{ path('year_index', {'id':year.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% else %}
+                        <tr class="text-center"><td colspan="5"><h5>Aucune donnée enregistrée...</h5></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
         </div>
     </div>
     {% endif %}

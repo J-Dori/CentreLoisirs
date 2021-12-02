@@ -312,7 +312,7 @@ class Animateur
 
     public function __toString()
     {
-        return $this->title ." ". ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
+        return ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
     }
 
     public function fullAddress()

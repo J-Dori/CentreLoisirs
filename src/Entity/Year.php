@@ -71,6 +71,11 @@ class Year
      */
     private $inscriptions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=InscriptionDetail::class, mappedBy="year", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $inscriptionDetails;
+
     public function __construct()
     {
         $this->animateurContracts = new ArrayCollection();
@@ -78,6 +83,7 @@ class Year
         $this->ageGroups = new ArrayCollection();
         $this->rates = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->inscriptionDetails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -264,6 +270,7 @@ class Year
         return $this;
     }
 
+
     /**
      * @return Collection|Inscription[]
      */
@@ -288,6 +295,36 @@ class Year
             // set the owning side to null (unless already changed)
             if ($inscription->getYear() === $this) {
                 $inscription->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InscriptionDetail[]
+     */
+    public function getInscriptionDetails(): Collection
+    {
+        return $this->inscriptionDetails;
+    }
+
+    public function addInscriptionDetail(InscriptionDetail $inscriptionDetail): self
+    {
+        if (!$this->inscriptionDetails->contains($inscriptionDetail)) {
+            $this->inscriptionDetails[] = $inscriptionDetail;
+            $inscriptionDetail->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscriptionDetail(InscriptionDetail $inscriptionDetail): self
+    {
+        if ($this->inscriptionDetails->removeElement($inscriptionDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($inscriptionDetail->getYear() === $this) {
+                $inscriptionDetail->setYear(null);
             }
         }
 

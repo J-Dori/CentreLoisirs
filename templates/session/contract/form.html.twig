@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sessions{% endblock %}
+
+{% set setTitle = 'AJOUTER' %}
+{% if editMode %}
+    {% set setTitle = 'MODIFIER' %}
+{% endif %}
+{% block pageTitle %}{{ setTitle }} CONTRAT{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-lg-6 col-md-8 col-sm-12">
+        <div class="mt-2">
+            Animateur &ensp;{{ form_widget(form.animateur, {'attr': {'class': 'form-select'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.animateur) }}</div>
+        </div>
+        <div class="mt-2">
+            Type Contrat &ensp;{{ form_widget(form.typeContract, {'attr': {'class': 'form-select'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.typeContract) }}</div>
+        </div>
+        <div class="mt-2">
+            Groupe d'âge &ensp;{{ form_widget(form.ageGroup, {'attr': {'class': 'form-select'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.ageGroup) }}</div>
+        </div>
+        <div class="mt-2">
+            Salaire &ensp;{{ form_widget(form.salary, {'attr': {'class': 'form-control', 'style': 'max-width:150px;text-align:right'}}) }}
+            <div class="form-error text-center">{{ form_errors(form.salary) }}</div>
+        </div>
+        
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" href="{{ path('year_index', {'id': form.year.vars.value}) }}">Annuler</a>
+
+        <div class="mt-2">
+            {{ form_widget(form.year, {'attr': {'class': 'form-control', 'style': 'visibility:hidden',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.year) }}</div>
+        </div>
+        
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -5,12 +5,12 @@
 {% block body %}
 <div class="col-lg-10 col-md-12 m-auto">
     {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-md btn-primary btn-add mb-5" href="{{ path('year_add') }}">Ajouter Session</a>
+    <a class="btn btn-md btn-primary btn-add mb-3" href="{{ path('year_add') }}">Ajouter Session</a>
     {% endif %}
     <table class="tableList display w-100" data-order='[[ 0, "desc" ]]'>
         <thead>
             <tr>
-                <td class="text-center" style="max-width:60px">ANNÉE</td>
+                <td class="text-center" style="width:60px">ANNÉE</td>
                 <td class="text-center">Nº HABILITATION</td>
                 <td class="text-center" style="max-width:100px">SEMAINES</td>
                 <td class="text-center" style="max-width:120px">INSCRIPTIONS</td>
@@ -27,10 +27,15 @@
                 {% else %}
                     {% set yearStatus = "statusClose" %}
                 {% endif %}
-                <td class="text-left"><i class="fas fa-circle {{ yearStatus }}"></i>&ensp;{{ list.year }}</td>
+                <td class="text-left">
+                    <a  class="link-overTableClick btn btn-sm" title="Ouvrir Session"
+                        href="{{ path('session_activeYear', {'id':list.id, 'back':'session'}) }}">
+                        <i class="fas fa-circle {{ yearStatus }}"></i>&ensp;{{ list.year }}
+                    </a>
+                </td>
                 <td class="text-center">{{ list.numHabilitation }}</td>
                 <td class="text-center">{{ list.weeks|length }}</td>
-                <td class="text-center"></td>
+                <td class="text-center">{{ list.inscriptions|length }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                 <td class="text-center">
                     <a class="btn btn-sm btn-warning btn-edit" href="{{ path('year_edit', {'id':list.id}) }}">Modifier</a>
@@ -49,7 +54,8 @@
     </table>
 </div>
 
-{% block tableScript  %}
+{% block javascripts  %}
+    {{ parent() }}
     <script src="{{ asset("js/tableScript.js") }}"></script>
 {% endblock %}
 {% endblock %}

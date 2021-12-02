@@ -7,7 +7,7 @@ function confirmDelete() {
 }
 
 //Error & Success message bar (under the NavBar)
-window.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function(){
 var alertMsg = document.querySelector(".alertMsg")
     setInterval(function(){
         alertMsg.style.opacity = '0';

@@ -8,7 +8,8 @@
         </button>
         <div class="collapse navbar-collapse flex justify-content-between" id="main_nav">
             <ul class="navbar-nav">
-                <a class="nav-link" href="{{ path('home') }}">INSCRIPTIONS</a>                    
+                <a class="nav-link" href="{{ path('session_index') }}">SESSIONS</a>
+                <a class="nav-link" href="{{ path('inscription_index') }}">INSCRIPTIONS</a>                    
                 <li class="nav-item dropdown" id="myDropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">DONNÉES&ensp;</a>
                     <ul class="dropdown-menu">
@@ -20,7 +21,6 @@
                         <li><a class="dropdown-item" href="{{ path('user_index') }}">Utilisateurs</a></li>
                     </ul>
                 </li>
-                <a class="nav-link" href="{{ path('session_index') }}">SESSIONS</a>
             </ul>
             {% endif %}
             <ul class="navbar-nav">

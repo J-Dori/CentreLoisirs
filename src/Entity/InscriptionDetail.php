@@ -20,7 +20,7 @@ class InscriptionDetail
     /**
      * @ORM\Column(type="boolean")
      */
-    private $withMeal;
+    private $withMeal = false;
 
     /**
      * @ORM\ManyToOne(targetEntity=Week::class, inversedBy="inscriptionDetails")
@@ -37,6 +37,7 @@ class InscriptionDetail
     /**
      * @ORM\ManyToOne(targetEntity=Children::class, inversedBy="inscriptionDetails")
      * @ORM\JoinColumn(nullable=false)
+     * @ORM\OrderBy({"fname" = "ASC", "lname" = "ASC"})
      */
     private $children;
 
@@ -45,6 +46,11 @@ class InscriptionDetail
      * @ORM\JoinColumn(nullable=false)
      */
     private $inscription;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Year::class, inversedBy="inscriptionDetails")
+     */
+    private $year;
 
 
     public function getId(): ?int
@@ -108,6 +114,18 @@ class InscriptionDetail
     public function setInscription(?Inscription $inscription): self
     {
         $this->inscription = $inscription;
+
+        return $this;
+    }
+
+    public function getYear(): ?Year
+    {
+        return $this->year;
+    }
+
+    public function setYear(?Year $year): self
+    {
+        $this->year = $year;
 
         return $this;
     }

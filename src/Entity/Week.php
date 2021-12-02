@@ -111,6 +111,12 @@ class Week
         return $this->dateEnd;
     }
 
+    public function countDays()
+    {
+        $result = $this->dateStart->diff($this->dateEnd);
+        return $result->days + 1;
+    }
+
     public function setDateEnd(\DateTimeInterface $dateEnd): self
     {
         $this->dateEnd = $dateEnd;
@@ -171,4 +177,12 @@ class Week
 
         return $this;
     }
+
+
+    public function __toString()
+    {
+        return $this->weekNum ." - ". $this->theme;   
+    }
+
+
 }

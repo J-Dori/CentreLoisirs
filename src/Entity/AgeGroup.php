@@ -34,9 +34,15 @@ class AgeGroup
      */
     private $inscriptionDetails;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AnimateurContract::class, mappedBy="ageGroup")
+     */
+    private $animateurContracts;
+
     public function __construct()
     {
         $this->inscriptionDetails = new ArrayCollection();
+        $this->animateurContracts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +98,41 @@ class AgeGroup
             // set the owning side to null (unless already changed)
             if ($inscriptionDetail->getAgeGroup() === $this) {
                 $inscriptionDetail->setAgeGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->ageGroup;   
+    }
+
+    /**
+     * @return Collection|AnimateurContract[]
+     */
+    public function getAnimateurContracts(): Collection
+    {
+        return $this->animateurContracts;
+    }
+
+    public function addAnimateurContract(AnimateurContract $animateurContract): self
+    {
+        if (!$this->animateurContracts->contains($animateurContract)) {
+            $this->animateurContracts[] = $animateurContract;
+            $animateurContract->setAgeGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimateurContract(AnimateurContract $animateurContract): self
+    {
+        if ($this->animateurContracts->removeElement($animateurContract)) {
+            // set the owning side to null (unless already changed)
+            if ($animateurContract->getAgeGroup() === $this) {
+                $animateurContract->setAgeGroup(null);
             }
         }
 

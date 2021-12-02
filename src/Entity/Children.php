@@ -61,6 +61,7 @@ class Children
 
     /**
      * @ORM\ManyToMany(targetEntity=Responsable::class, mappedBy="children")
+     * @ORM\OrderBy({"lname" = "ASC", "fname" = "ASC"})
      */
     private $responsables;
 
@@ -194,27 +195,6 @@ class Children
         return $this;
     }
 
-
-    public function __toString()
-    {
-        return ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
-    }
-
-    public function getAge()
-    {
-        if ($this->birthday == null)
-            return null;
-
-        $today = new \DateTime;
-        $age = $this->birthday->diff($today);
-        return $age->format("%y");
-    }
-
-    //Assert Expression on $birthday
-    public function getCurrentDate(){
-        return new \DateTime();
-    }
-
     /**
      * @return Collection|InscriptionDetail[]
      */
@@ -243,6 +223,34 @@ class Children
         }
 
         return $this;
+    }
+
+    /************************************************************************************************************/
+
+    public function __toString()
+    {
+        return ucfirst($this->fname) ." ". mb_strtoupper($this->lname);
+    }
+
+    public function getNameAndAge()
+    {
+        $age = $this->getAge();
+        return ucfirst($this->fname) ." ". mb_strtoupper($this->lname) ." - $age ans";
+    }
+
+    public function getAge()
+    {
+        if ($this->birthday == null)
+            return "";
+
+        $today = new \DateTime;
+        $age = $this->birthday->diff($today);
+        return $age->format("%y");
+    }
+
+    //Assert Expression on $birthday
+    public function getCurrentDate(){
+        return new \DateTime();
     }
 
 }

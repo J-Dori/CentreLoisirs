@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payments{% endblock %}
+
+{% block pageTitle %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+<div class="wrapper m-auto col-lg-8 col-md-12 my-3">
+    <a class="btn btn-lg btn-secondary mb-5" href="{{ path('inscription_edit', {'id':inscription.id}) }}"><i class="fas fa-chevron-left text-white"></i>&emsp;Inscription</a>
+    <div class="flex-justifyBetween">
+        <div>
+            <h3>Inscription nº {{ inscription.numInsc }}</h3>
+            <h5 class="text-center">{{ inscription.responsable }}</h5>
+        </div>
+        <div>
+            <h3>Montant à regler</h3>
+            <h5 class="text-center">{{ inscription.totalInsc|number_format(2, ',', ' ') }} Eur</h5>
+        </div>
+    </div>
+
+    <div class="mt-5 paymentFormTableHeader">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width:50px"></th>
+                    <th>Date</th>
+                    <th>Mode Paiement</th>
+                    <th style="text-align:right">Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in inscription.payments %}    
+                <tr>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            {# onclick="confirmDelete()" 
+                            data-text="{{ list.amount|number_format(2, ',', ' ') }} Eur"
+                            data-ctrl="le paiement en {{ list.modePay }} de" #} href="{{ path('payment_del', {'id':list.id, 'insc':inscription.id}) }}"><i class="far fa-trash-alt text-white"></i>
+                        </a>
+                    </td>
+                    <td class="text-center">{{ list.datePay|date("d-m-Y") }}</td>
+                    <td class="text-center">{{ list.modePay }}</td>
+                    <td style="text-align:right">{{ list.amount|number_format(2, ',', ' ') }} Eur</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="flex-justifyBetween">
+            <div>
+                {% if totalPaid < inscription.totalInsc %}
+                <a id="payment__addBtt" class="btn btn-md btn-primary mt-3" href="{{ path('payment_add', {'id':inscription.id}) }}">Ajouter paiement</a>
+                {% endif %}
+            </div>
+            <div style="text-align:right">
+                <h5>TOTAL PAYÉ&emsp;=&emsp;{{ totalPaid|number_format(2, ',', ' ') }} Eur</h5>
+                {% if totalPaid < inscription.totalInsc %}
+                    {% set solde = totalPaid - inscription.totalInsc %}
+                    <h5 class="text-danger">SOLDE&emsp;=&emsp;{{ solde|number_format(2, ',', ' ') }} Eur</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div id="payment__form">
+    {% block formPay %}{% endblock %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            var addBtn = document.querySelector("#payment__addBtt")
+            var cancelBtn = document.querySelector("#payment__cancelBtn")
+            var payForm = document.querySelector("#payment__form")                    
+            addBtn.addEventListener("click", () => {
+                payForm.style.display = 'flex'
+            });
+            cancelBtn.addEventListener("click", () => {
+                payForm.style.display = 'none'
+            });
+        });
+    </script>
+{% endblock %}

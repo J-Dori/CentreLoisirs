@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscriptions{% endblock %}
+
+{% block pageTitle %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+    <div class="wrapper m-auto col-xl-10 col-lg-12">
+        <div id="insc_edit_header" class="flex-justifyBetween mb-3">
+            <div>
+                <a href="" class="btn btn-md btn-print">Imprimer</a>
+                <a href="" class="btn btn-md btn-print">Attestation</a>
+            </div>
+            <a href="" class="btn btn-md btn-danger">Supprimer inscription</a>
+        </div>
+        <hr>
+        {{ form_start(form) }}
+        <div class="insc_edit_resp_tarif flex-justifyBetween">
+            <div id="insc_edit_resp" class="col-md-6 col-sm-12">
+                <div class="mt-2 flex-justifyBetween w-100">
+                    <p>Inscription nº &ensp;{{ form_widget(form.numInsc, {'attr': {'class': 'form-control text-center', 'style': 'max-width:50px',}}) }}
+                    </p>
+                    <p>
+                        Tarif (QF) &ensp;{{ form_widget(form.rate, {'attr': {'class': 'form-select', 'style': 'max-width:350px',}}) }}
+                        <span class="form-error text-center">{{ form_errors(form.rate) }}</span>
+                    </p>
+                </div>
+                <div class="mt-2">
+                    Responsable &ensp;{{ form_widget(form.responsable, {'attr': {'class': 'form-select'}}) }}
+                    <div class="form-error text-center">{{ form_errors(form.responsable) }}</div>
+                </div>
+                <div class="mt-2">
+                    Notes &ensp;{{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows':'3'}}) }}
+                    <div class="form-error text-center">{{ form_errors(form.notes) }}</div>
+                </div>
+            </div>
+            <div id="insc_edit_totals">
+                <h3 class="text-center">Résumé</h3>
+                <hr>
+                <div class="flex-justifyBetween flex-alignBaseline">
+                    <p><strong>Total Semaines :</strong></p>
+                    <p>{{ form_widget(form.totalWeek, {'attr': {'class': 'form-control', 'style': 'text-align:right; max-width:100px',}}) }}
+                </div>
+                <div class="flex-justifyBetween flex-alignBaseline">
+                    <p>
+                        <p><b>Qtt Repas :</b>&ensp;{{ priceMeal|number_format(2, ',', ' ') }} Eur <b>x</b>&ensp;</p>
+                        <p>{{ form_widget(form.qttMeal, {'attr': {'class': 'form-control text-center', 'style': 'max-width:50px',}}) }}</p>
+                    </p>
+                    {% if form.qttMeal.vars.value == null %}
+                        {% set qttMealValue = 0 %}
+                    {% else %}
+                        {% set qttMealValue = form.qttMeal.vars.value %}
+                    {% endif %}
+                    <p>&ensp;= {{ (priceMeal * qttMealValue)|number_format(2, ',', ' ') }}</p>
+                </div>
+                <div class="flex-justifyBetween flex-alignBaseline">
+                    <p><strong>Frais Inscription :</strong></p>
+                    <p>{{ form_widget(form.priceInsc, {'attr': {'class': 'form-control', 'style': 'text-align:right; max-width:100px',}}) }}
+                </div>
+                <div class="flex-justifyBetween flex-alignBaseline">
+                    <p><strong>Total à Payer :</strong></p>
+                    <p>{{ form_widget(form.totalInsc, {'attr': {'class': 'form-control', 'style': 'text-align:right; max-width:100px',}}) }}
+                </div>
+            </div>
+        </div>
+
+        {# INSCRIPTION DETAILS - add Children #}
+        <div id="insc_edit_details" class="my-4">
+            <div id="insc_edit_details_header" class="flex-justifyBetween my-4 w-100">
+                <h3>Détails de l'inscription&emsp;</h3>
+                <a class="btn btn-md btn-primary" href="{{ path('inscription_addChildren', {'insc': inscID }) }}">Ajouter Enfant</a>
+            </div>
+            {# store the prototype on the data-prototype attribute #}
+            <section id="inscriptionDetails" class="form-row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ENFANT</th>
+                            <th>SEMAINE</th>
+                            <th class="text-center">GROUP D'ÂGE</th>
+                            <th class="text-center">REPAS</th>
+                            <th style="width:80px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for list in inscriptionDetails %}
+                        <tr style="cursor:pointer" onclick="location.href='{{ path('year_index', {'id':list.id}) }}'">
+                            <td>{{ list.children.getNameAndAge }}</td>
+                            <td>{{ list.week }}</td>
+                            <td class="text-center">{{ list.ageGroup.ageGroup }}</td>
+                            <td class="text-center">{{ list.withMeal == 1 ? "Oui" : "Non" }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('inscription_editChildren', {'id':list.id, 'insc':inscID}) }}"><i class="far fa-edit"></i></a>
+                                <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                                onclick="confirmDelete()" 
+                                data-text="{{ list.week }}"
+                                data-ctrl="l'Enfant de la Semaine" href="{{ path('responsable_index', {'id':list.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr class="text-center"><td><h3>Aucune donnée enregistrée...</h3></td></tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Enfants :</strong>&ensp;{{ totalChildren }}</td>
+                            <td><strong>Semaines :</strong>&ensp;{{ totalWeek }}</td>
+                            <td class="text-center" colspan="2"><strong>Tarif/Semaine :</strong>&ensp;{{ ratePrice|number_format(2, ',', ' ') }} Eur</td>
+                        </tr>
+                        {% if ratePrice == null %}
+                        <tr>
+                            <td colspan="5" class="text-center bg-danger text-white text-bold">ATTENTION : Aucun tarif enregistré pour {{ totalChildren }} enfant(s)</td>
+                        </tr>
+                        {% endif %}
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+        <div id="insc__formBtn">
+            <div id="insc__saveBtn">
+                <p>
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-md btn-primary'}}) }}
+                    {{ form_widget(form.saveAndPay, {'attr': {'class': 'btn btn-md btn-warning'}}) }}
+                </p>
+            </div>
+            <div id="insc__formUpdate">
+                {{ form_widget(form.update, {'attr': {'class': 'btn btn-md btn-warning'}}) }}
+            </div>
+            <a id="payment__cancelBtt" class="btn btn-md btn-danger" href="{{ path('inscription_index') }}">Annuler / Fermer</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            var rate = document.querySelector("#inscription_edit_rate")
+            var totalWeek = document.querySelector("#inscription_edit_totalWeek")
+            var qttMeal = document.querySelector("#inscription_edit_qttMeal")
+            var priceInsc = document.querySelector("#inscription_edit_priceInsc")
+            var totalInsc = document.querySelector("#inscription_edit_totalInsc")
+            var formBtn = document.querySelector("#insc__saveBtn")
+            var formUpdate = document.querySelector("#insc__formUpdate")
+            rate.addEventListener("change", (e) => {
+                changeBtn(e)
+            });
+            totalWeek.addEventListener("keydown", (e) => {
+                changeBtn(e)
+            });
+            qttMeal.addEventListener("keydown", (e) => {
+                changeBtn(e)
+            });
+            priceInsc.addEventListener("keydown", (e) => {
+                changeBtn(e)
+            });
+            totalInsc.addEventListener("keydown", (e) => {
+                changeBtn(e)
+            });
+
+            function changeBtn(event) {
+                //prevent ENTER KEY pressed to avoid Submit_form
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                }
+                formBtn.style.display = 'none'
+                formUpdate.style.display = 'block'
+            }
+        });
+    </script>
+{% endblock %}

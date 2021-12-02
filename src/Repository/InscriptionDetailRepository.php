@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\InscriptionDetail;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,67 @@ class InscriptionDetailRepository extends ServiceEntityRepository
         parent::__construct($registry, InscriptionDetail::class);
     }
 
-    // /**
-    //  * @return InscriptionDetail[] Returns an array of InscriptionDetail objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    //Results to NEW/EDIT Inscriptions
+    public function getTotalChildren($id)
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?InscriptionDetail
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('det')
+            ->select('COUNT(DISTINCT det.children) AS total')
+            ->andWhere('det.inscription = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function getTotalWeek($id)
+    {
+        return $this->createQueryBuilder('det')
+            ->select('COUNT(det.week) AS total')
+            ->andWhere('det.inscription = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function getTotalMeal($id)
+    {
+        return $this->createQueryBuilder('det')
+            ->select('COUNT(det.withMeal) AS total')
+            ->andWhere('det.inscription = :id')
+            ->andWhere('det.withMeal = true')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    //set YearId to all InscriptionDetails (form CollectionType) on NEW inscription
+    public function setYearNewInscription($inscID, $yearID)
+    {
+        return $this->createQueryBuilder('det')
+                ->update()
+                ->set('det.year', $yearID)
+                ->where('det.inscription = :id')
+                ->setParameter('id', $inscID)
+                ->getQuery()
+                ->execute();
+        ;
+    }
+    //END : Results to NEW/EDIT Inscriptions
+
+    //********************************** DASHBOARD **********************************/
+    //count nº of Children By Week / from YEAR
+    public function dashboard_countChildren($year)
+    {
+        return $this->createQueryBuilder('det')
+            ->select('COUNT(DISTINCT det.children) AS total')
+            ->andWhere('det.year = :val')
+            ->groupBy('det.week')
+            ->setParameter('val', $year)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 }

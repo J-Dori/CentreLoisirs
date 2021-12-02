@@ -1,0 +1,37 @@
+{% extends 'payment/index.html.twig' %}
+
+{% block formPay %}
+{{ form_start(form) }}
+<div class="mt-3 paymentFormTableHeader">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Mode Paiement</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ form_widget(form.datePay, {'attr': {'class': 'form-control text-center', 'style':'max-width:140px'}}) }}</td>
+                <td>{{ form_widget(form.modePay, {'attr': {'class': 'form-select'}}) }}</td>
+                <td>{{ form_widget(form.amount, {'attr': {'class': 'form-control formPrice', 'style':'max-width:120px', 'value' : solde|abs|number_format(2, ',', ' ') }}) }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-center" colspan="4">
+                    {{ form_errors(form.datePay) }}
+                    {{ form_errors(form.modePay) }}
+                    {{ form_errors(form.amount) }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <button class="btn btn-md btn-primary mt-3" id="payment__submitBtn" type="submit">Enregistrer</button>
+    <a class="btn btn-md btn-danger mt-3" id="payment__cancelBtn">Annuler</a>
+</div>
+
+{{ form_end(form) }}
+{% endblock %}
+

@@ -93,7 +93,7 @@ class PeopleController extends AbstractController
     {
         return $this->render('people/children/profile.html.twig', [
                 'profile' => $this->getDoctrine()->getRepository(Children::class)->find($children->getId()),
-                'responsableList' => $this->getDoctrine()->getRepository(Responsable::class)->findAll()
+                'responsables' => $this->getDoctrine()->getRepository(Responsable::class)->findBy([], ['lname'=>'ASC', 'fname'=>'ASC'])
             ]);
     }
 
@@ -168,7 +168,7 @@ class PeopleController extends AbstractController
             $manager->flush();
 
             $this->addFlash("success", "Données enregistrées");
-            return $this->redirectToRoute('children_profile', ['id' => $request->query->get('id')]);
+            return $this->redirectToRoute('children_profile', ['id' => $request->attributes->get('id')]);
         }
         else {
             $this->addFlash("error", "Une erreur est survenue...");
@@ -244,8 +244,9 @@ class PeopleController extends AbstractController
             $goBackId = $entity->getId();
         }
 
+        //show age under Birthday input on editMode
         if ($entity)
-            $age = $entity->getAge();
+            $age = $entity->getAge() == null ? "-" : $entity->getAge();
         
         $form = $this->createForm(ChildrenType::class, $entity);
 
@@ -263,6 +264,7 @@ class PeopleController extends AbstractController
             return $this->redirectToRoute('children_index');
         }
 
+        
         return $this->render('people/children/form.html.twig', [
             'form' => $form->createView(),
             'goBack' => $goBack,

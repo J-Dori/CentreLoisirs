@@ -1,20 +1,126 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Session {{ year.year }}{% endblock %}
+{% block pageTitle %}SESSION {{ year.year }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>HOMEPAGE / DASHBOARD</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/laragon/www/Symfony/ProjetFinal/centreLoisirs/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/laragon/www/Symfony/ProjetFinal/centreLoisirs/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
+<div class="wrapper dashboard">
+    <h1 class="text-center my-3">RÉCAPITULATIF</h1>
+    <section id="weekDetails">
+        <div id="weekDetailsTable">
+            <table class="table table-hover">
+                <thead class="text-center">
+                    <tr class="shadow-sm">
+                        <th class="bg-light" colspan="5">DÉTAILS PAR SEMAINE</th>
+                        <th class="bg-primary text-white" colspan="2">REPAS</th>
+                        <th class="bg-warning">ENFANTS</th>
+                    </tr>
+                    <tr>
+                        <th>SEM Nº</th>
+                        <th style="min-width:110px">DATE DÉBUT</th>
+                        <th style="min-width:100px">DATE FIN</th>
+                        <th style="text-align: left">THÈME</th>
+                        <th>TYPE</th>
+                        <th>AVEC</th>
+                        <th>SANS</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in weeks %}
+                    <tr>
+                        <td class="text-center">{{ week.weekNum }}</td>
+                        <td class="text-center">{{ week.dateStart|date('m-d-Y') }}</td>
+                        <td class="text-center">{{ week.dateEnd|date('m-d-Y') }}</td>
+                        <td>{{ week.theme }}</td>
+                        <td class="text-center">{{ week.weekType }}</td>
+                        {% set weekMealsTrue = 0 %}
+                        {% set weekMealsFalse = 0 %}
+                        {% set weekChildren = 0 %}
+                        {% for det in inscDetails %}
+                            {% if det.week.id == week.id  %}
+                                {% if det.withMeal == 1 %}
+                                    {% set weekMealsTrue = weekMealsTrue + 1 %}
+                                {% else %}
+                                    {% set weekMealsFalse = weekMealsFalse + 1 %}
+                                {% endif %}
+                                {% set weekChildren = weekChildren + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        <td class="text-center">{{ weekMealsTrue }}</td>
+                        <td class="text-center">{{ weekMealsFalse }}</td>
+                        <td class="text-center">{{ weekChildren }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        {% set yearMealsTrue = 0 %}
+                        {% set yearMealsFalse = 0 %}
+                        {% set yearChildren = 0 %}
+                        {% for det in inscDetails %}
+                            {% if det.withMeal == 1 %}
+                                {% set yearMealsTrue = yearMealsTrue + 1 %}
+                            {% else %}
+                                {% set yearMealsFalse = yearMealsFalse + 1 %}
+                            {% endif %}
+                            {% set yearChildren = yearChildren + 1 %}
+                        {% endfor %}
+                        <td colspan="5"></td>
+                        <td class="text-center">{{ yearMealsTrue }}</td>
+                        <td class="text-center">{{ yearMealsFalse }}</td>
+                        <td class="text-center">{{ yearChildren }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+    <section id="yearFinancialResult">
+        <section id="yearTotals">
+            <h3>Détails de la Session</h3>
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th>INSC.</th>
+                        <th>ENFANTS</th>
+                        <th>SEMAINES</th>
+                        <th>REPAS</th>
+                        <th>FRAIS INSC.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ totalColumns[0].totalInscription }}</td>
+                        <td>{{ yearChildren }}</td>
+                        <td>{{ totalColumns[0].totalWeek|number_format(2, ',', ' ') }} Eur</td>
+                        <td>{{ (totalColumns[0].totalMeal * year.priceMeal)|number_format(2, ',', ' ') }} Eur</td>
+                        <td>{{ totalColumns[0].totalPriceInsc|number_format(2, ',', ' ') }} Eur</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="yearSolde">
+            <h3>Solde des Inscriptions</h3>
+            <p>
+                <span><b>Total prévu :</b></span>
+                <span>{{ totalExpected|number_format(2, ',', ' ') }} Eur</span>
+            </p>
+            <p>
+                <span><b>Total reçu :</b></span>
+                <span>{{ totalPaid|number_format(2, ',', ' ') }} Eur</span>
+            </p>
+            <hr>
+            <p>
+                <span><b>SOLDE :</b></span>
+                {% set soldeClass = 'yearSolde-pos' %}
+                {% set solde = totalPaid - totalExpected %}
+                {% if solde < 0 %}
+                    {% set soldeClass = 'yearSolde-neg' %}
+                {% endif %}
+                <span class='{{ soldeClass }}'>{{ solde|number_format(2, ',', ' ') }} Eur</span>
+            </p>
+        </section>
+    </section>
 </div>
 {% endblock %}

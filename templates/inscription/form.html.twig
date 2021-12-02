@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscriptions{% endblock %}
+
+{% block pageTitle %}AJOUTER INSCRIPTION{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="wrapper m-auto col-xl-10 col-lg-12 col-md-12">
+        <div class="mt-2">
+            Inscription nº &ensp;{{ form_widget(form.numInsc, {'attr': {'class': 'form-control text-center', 'style': 'max-width:50px',}}) }}
+        </div>
+        <div class="insc__resp_tarif">
+            <div class="mt-2">
+                Responsable &ensp;{{ form_widget(form.responsable, {'attr': {'class': 'form-select', 'style': 'min-width:350px',}}) }}
+                <div class="form-error text-center">{{ form_errors(form.responsable) }}</div>
+            </div>
+            <div class="mt-2">
+                Tarif (QF) &ensp;{{ form_widget(form.rate, {'attr': {'class': 'form-select', 'style': 'max-width:250px',}}) }}
+                <div class="form-error text-center">{{ form_errors(form.rate) }}</div>
+            </div>
+        </div>
+        <div class="mt-2">
+            Notes &ensp;{{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows':'3', 'style': 'width:100%',}}) }}
+            <div class="form-error text-center">{{ form_errors(form.notes) }}</div>
+        </div>
+
+        {# INSCRIPTION DETAILS - add Children #}
+        <div id="details" class="my-4">
+            <p>
+                <h3>
+                    Détails de l'inscription&emsp;
+                    <button type="button"
+                    class="add-another-collection-widget btn btn-lg btn-primary"
+                    data-list-selector="#inscriptionDetails-fields-list">Ajouter enfant</button>
+                </h3>
+            </p>
+            {# store the prototype on the data-prototype attribute #}
+            <section id="inscriptionDetails-fields-list" class="form-row"
+                data-prototype="{{ form_widget(form.inscriptionDetails.vars.prototype)|e }}"
+                data-widget-counter="{{ form.inscriptionDetails|length }}">
+                {% for detail in form.inscriptionDetails %}
+                    {{ form_row(detail) }}
+                    {{ form_errors(detail) }}
+                {% endfor %}
+            </section>
+        </div>
+        <div>
+            <p>
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-md btn-primary submitBtn'}}) }}
+                <a class="btn btn-md btn-danger" href="{{ path('inscription_index') }}">Annuler</a>
+            </p>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const button = document.querySelector('.add-another-collection-widget')
+            var submitBtn = document.querySelector('.submitBtn')
+            var submitBtnPay = document.querySelector('.submitBtnPay')
+
+            //on créé un élémént DOM button
+            var removeBtn = document.createElement("button")
+            //on lui ajoute la classe .removeBtn et du texte ("×")
+            removeBtn.classList.add("removeBtn")
+            removeBtn.innerHTML = "<i class='fas fa-user-times text-danger'></i>"
+
+            button.addEventListener("click", function (e) {
+                //on récupère l'id de la liste des InscDetails stocké dans l'attribute data-list-selector du button 
+                var listId = button.getAttribute('data-list-selector')
+                //on récupère l'élément du DOM correspondant à cette id
+                var list = document.querySelector(listId)
+                //le compteur de InscDetails c'est soit la valeur de l'attr data-widget-counter, soit le nombre de InscDetails
+                //déjà présentes dans la liste (en cas d'edit)
+                var counter = list.dataset.widgetCounter || list.querySelectorAll(listId+">*").length                
+                // on récupère le HTML d'un form de InscDetail complet (data-prototype)
+                var newWidget = list.getAttribute('data-prototype')
+                // on remplace toute occurence de __name__ par un numéro unique, correspondant au compteur de
+                // InscDetails de la liste
+                newWidget = newWidget.replace(/__name__/g, counter)
+                //on incrémente le compteur (vu qu'on vient d'ajouter un InscDetail)
+                counter++
+                //et on met à jour la valeur de l'attribute data-widget-counter
+                list.dataset.widgetCounter = counter
+                // on créé un nouvel élément DOM (une div ici)
+                var newElem = document.createElement("div")
+                newElem.classList.add("flex-form")
+                //on remplit cet élément avec tout le HTML d'un formulaire de InscDetail (data-prototype)
+                newElem.innerHTML = newWidget
+                //on ajoute ce bouton en tant qu'enfant du formulaire de InscDetail
+                newElem.appendChild(removeBtn.cloneNode(true))
+                //niveau DOM, on ajoute ce nouvel élément dans la liste
+                list.appendChild(newElem)
+                submitBtn.style.display = 'inline-block'
+                submitBtnPay.style.display = 'inline-block'
+            });
+
+            //pour cibler les boutons supprimer, on récupère la liste complète
+            var wrapper = document.querySelector('#inscriptionDetails-fields-list')
+
+            var inscriptionDetails = document.querySelectorAll("#inscriptionDetails-fields-list>*")
+            inscriptionDetails.forEach(question => {
+                inscriptionDetail.appendChild(removeBtn.cloneNode(true))
+            });
+
+            //lorsqu'un clic survient dans la zone de la liste des InscDetails
+            wrapper.addEventListener('click', function(e) {
+                //counting number of elements, if only 1 = hide Save buttons
+                var listId = button.getAttribute('data-list-selector')
+                var list = document.querySelector(listId)
+                var counter = list.querySelectorAll(listId+">*").length
+
+                e.preventDefault()
+                //on vérifie que la cible du clic est un bouton ayant la classe "removeBtn"
+                if(e.target.classList.contains("fa-user-times")){
+                    //on supprime l'élément parent de la cible du clic
+                    e.target.parentNode.parentNode.remove()
+                    if (counter == 1) {
+                        submitBtn.style.display = 'none'
+                        submitBtnPay.style.display = 'none'
+                    }
+                }
+            })
+        })
+        
+    </script>
+{% endblock %}

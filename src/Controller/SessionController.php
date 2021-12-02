@@ -12,8 +12,10 @@ use App\Form\YearType;
 use App\Entity\AgeGroup;
 use App\Entity\ArrayList;
 use App\Form\AgeGroupType;
+use App\Form\ContractType;
 
 use App\Form\YearCopyType;
+use App\Entity\AnimateurContract;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,8 +50,28 @@ class SessionController extends AbstractController
             'weeksList' => $manager->getRepository(Week::class)->findBy(['year'=>$yearId]),
             'ageList' => $manager->getRepository(AgeGroup::class)->findBy(['year'=>$yearId]),
             'rateList' => $manager->getRepository(Rate::class)->findBy(['year'=>$yearId]),
+            'contractList' => $manager->getRepository(AnimateurContract::class)->findBy(['year'=>$yearId]),
             'arrayList' => $manager->getRepository(ArrayList::class)->findBy(['year'=>$yearId]),
         ]);
+    }
+
+    /**
+     * @Route("/year/active/{id}", name="session_activeYear", requirements={"id"="\d+"})
+     */
+    public function activeYear(Request $request, EntityManagerInterface $manager): Response
+    {
+        $yearId = $request->attributes->get('id');
+        $back = $request->query->get('back');
+
+        $manager->getRepository(Year::class)->activeYear($yearId);
+        $active = $manager->getRepository(Year::class)->findOneBy(['status' => 'true']);
+
+        $this->addFlash('success', 'Session '. $active->getYear() .' est ouverte');
+
+        if ($back == 'year')
+            return $this->redirectToRoute('year_index', ['id' => $yearId]);
+
+        return $this->redirectToRoute('session_index');
     }
 
     //**************************************** YEAR ***********************************************/
@@ -254,4 +276,46 @@ class SessionController extends AbstractController
         ]);
     }
 
+
+    //**************************************** CONTRACTS ***********************************************/
+    //********************************************************************************************/
+     /**
+     * @Route("/contract/add/year/{id}", name="contract_add")
+     * @Route("/contract/{id}/edit", name="contract_edit", requirements={"id"="\d+"})
+     */
+    public function addContract(AnimateurContract $entity = null, Request $request, EntityManagerInterface $manager): Response
+    {
+        $yearId = $request->query->get('year'); //editMode
+
+        if (!$entity) {
+            $entity = new AnimateurContract();
+            $yearId = $request->attributes->get('id'); //addMode
+        }
+
+        //get values of ArrayList
+        $year = $manager->getRepository(Year::class)->findOneBy(['id'=>$yearId]);
+        $arrayList = $manager->getRepository(ArrayList::class)->findOneBy(['year' => $year]);
+        //get values of ArrayList - column
+        $titles = $arrayList->getTypeContract();
+        //transform array Keys to be equal to column text instead of 0,1,...
+        $titles = array_combine($titles, $titles);
+
+        $form = $this->createForm(ContractType::class, $entity, ['yearId'=>$yearId, 'titles' => $titles]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setYear($this->getDoctrine()->getRepository(Year::class)->findOneBy(['id'=>$yearId]));
+            $manager->persist($entity);
+            $manager->flush();
+
+            $this->addFlash("success", "Données enregistrées");
+            return $this->redirectToRoute('year_index', ['id'=> (int)$yearId]);
+        }
+
+        return $this->render('session/contract/form.html.twig', [
+            'form' => $form->createView(),
+            'editMode' => $entity->getId() !== null,
+        ]);
+    }
 }

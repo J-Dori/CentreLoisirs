@@ -37,6 +37,11 @@ class AnimateurContract
      */
     private $animateur;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=AgeGroup::class, inversedBy="animateurContracts")
+     */
+    private $ageGroup;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class AnimateurContract
     public function setAnimateur(?Animateur $animateur): self
     {
         $this->animateur = $animateur;
+
+        return $this;
+    }
+
+    public function getAgeGroup(): ?AgeGroup
+    {
+        return $this->ageGroup;
+    }
+
+    public function setAgeGroup(?AgeGroup $ageGroup): self
+    {
+        $this->ageGroup = $ageGroup;
 
         return $this;
     }

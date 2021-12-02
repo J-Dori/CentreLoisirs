@@ -48,12 +48,32 @@ class YearRepository extends ServiceEntityRepository
     }
     */
 
-    public function copyYear($value)
+    public function activeYear($id)
+    {
+        $this->createQueryBuilder('y')
+            ->update()
+            ->set('y.status', 'false')
+            ->getQuery()
+            ->execute()
+        ;
+
+        $this->createQueryBuilder('y')
+            ->update()
+            ->set('y.status', 'true')
+            ->where('y.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute()
+        ;
+        return;
+    }
+
+    public function copyYear($id)
     {
         return $this->createQueryBuilder('y')
             ->select('y.priceMeal', 'y.priceInscription', 'y.numHabilitation')
             ->where('y.id = :id')
-            ->setParameter('id', $value)
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
