@@ -11,7 +11,7 @@
                 <a href="" class="btn btn-md btn-print">Imprimer</a>
                 <a href="" class="btn btn-md btn-print">Attestation</a>
             </div>
-            <a href="" class="btn btn-md btn-danger">Supprimer inscription</a>
+            <a id="payment__cancelBtt" class="btn btn-md btn-danger" href="{{ path('inscription_index') }}">Annuler / Fermer</a>
         </div>
         <hr>
         {{ form_start(form) }}
@@ -68,7 +68,7 @@
         <div id="insc_edit_details" class="my-4">
             <div id="insc_edit_details_header" class="flex-justifyBetween my-4 w-100">
                 <h3>Détails de l'inscription&emsp;</h3>
-                <a class="btn btn-md btn-primary" href="{{ path('inscription_addChildren', {'insc': inscID }) }}">Ajouter Enfant</a>
+                <a class="btn btn-md btn-primary" href="{{ path('inscription_addChildren', {'insc': inscID }) }}">Ajouter Semaine</a>
             </div>
             {# store the prototype on the data-prototype attribute #}
             <section id="inscriptionDetails" class="form-row">
@@ -126,7 +126,7 @@
             <div id="insc__formUpdate">
                 {{ form_widget(form.update, {'attr': {'class': 'btn btn-md btn-warning'}}) }}
             </div>
-            <a id="payment__cancelBtt" class="btn btn-md btn-danger" href="{{ path('inscription_index') }}">Annuler / Fermer</a>
+            <a href="" class="btn btn-md btn-danger">Supprimer inscription</a>
         </div>
     </div>
     {{ form_end(form) }}

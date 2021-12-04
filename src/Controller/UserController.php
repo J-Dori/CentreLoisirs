@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserEditType;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +69,8 @@ class UserController extends AbstractController
             $entity = new User();
         }
         
-        $isAdmin = $entity->hasRoleAdmin();
+        //current User logged in - if ADMIN it will display ROLES
+        $isAdmin = $this->isGranted('ROLE_ADMIN'); 
 
         $form = $this->createForm(UserEditType::class, $entity, ['isAdmin' => $isAdmin]);
 

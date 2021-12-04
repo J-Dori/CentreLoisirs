@@ -4,15 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Rate;
 use App\Entity\Year;
-use App\Entity\Payment;
 use App\Entity\Inscription;
+use App\Entity\InscriptionDetail;
 use App\Entity\Responsable;
 use App\Form\InscriptionType;
-use App\Entity\InscriptionDetail;
 use App\Form\InscriptionEditType;
 use App\Form\InscriptionDetailType;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Cache\Persister\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,7 +47,7 @@ class InscriptionController extends AbstractController
     {
         $year = $manager->getRepository(Year::class)->findOneBy(['status' => 'true']);
 
-        //Each Session starts with Inscription nº at 1 (one), here we get manual incrementation 
+        //Each Session starts with Inscription nº at 1 (one), here we set manual incrementation 
         $getLastNum = $manager->getRepository(Inscription::class)->findLastNumInscription($year->getId());
         if ($getLastNum == null)
             $lastNum = 1; //1st of Session
@@ -127,7 +125,7 @@ class InscriptionController extends AbstractController
             $entity->setResponsable($responsable);
             $entity->setYear($year);
 
-            if ($form->get('save')->isClicked()) // Send to PaymentForm
+            if ($form->get('save')->isClicked()) // Save
             {
                 $calculate = $this->calculate($entity, $manager);                
                 $entity->setTotalWeek($calculate['totalWeekPrice']);
@@ -139,7 +137,7 @@ class InscriptionController extends AbstractController
                 return $this->redirectToRoute('inscription_edit', ['id' => $entity->getId()]);
             }
 
-            if ($form->get('update')->isClicked()) // Send to PaymentForm
+            if ($form->get('update')->isClicked()) // Update Totals modifications
             {
                 $calculate = $this->calculate($entity, $manager);
                 $totalToPay = $form['totalWeek']->getData();
@@ -148,7 +146,7 @@ class InscriptionController extends AbstractController
                 $entity->setTotalInsc($totalToPay);
             }
 
-            if ($form->get('saveAndPay')->isClicked()) // Send to PaymentForm
+            if ($form->get('saveAndPay')->isClicked()) // Opens PaymentForm
             {
                 return $this->redirectToRoute('payment_index', ['id' => $entity->getId()]);
             }
@@ -217,8 +215,8 @@ class InscriptionController extends AbstractController
         //$field -> to get the array key of $getRate, ex : $getRate['child1'] or $getRate['child2'] etc...
         $field = "child".$totalChildren['total'];   
         
-        $totalMeals = 0;
         //Get number of days of each WEEK (countDays) and add if WithMeal=true
+        $totalMeals = 0;
         foreach ($entity->getInscriptionDetails() as $key => $value) {
             if ($value->getWithMeal())
                 $totalMeals += $value->getWeek()->countDays();

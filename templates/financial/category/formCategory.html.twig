@@ -1,0 +1,17 @@
+{% extends 'financial/category/index.html.twig' %}
+
+{% block formCategory %}
+{{ form_start(form) }}
+    <p>
+        Catégorie :&emsp;{{ form_widget(form.title, {'attr': {'class': 'form-control', 'style':'max-width:350px'}}) }}
+    </p>     
+    <div class="form-error text-center">
+        {{ form_errors(form.title) }}
+    </div>
+    <p class="text-center">
+        <button class="btn btn-md btn-primary mt-3" id="category__submitBtn" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" id="category__cancelBtn">Annuler</a>
+    </p>
+{{ form_end(form) }}
+{% endblock %}
+

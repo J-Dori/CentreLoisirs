@@ -121,6 +121,29 @@
                 <span class='{{ soldeClass }}'>{{ solde|number_format(2, ',', ' ') }} Eur</span>
             </p>
         </section>
+        <a href="{{ path('financial_index') }}" id="yearFinancialSolde_link">
+            <section id="yearFinancialSolde">
+                <h3>Solde Financier</h3>
+                <p>
+                    <span><b>Recettes :</b></span>
+                    <span>{{ totalIncome|number_format(2, ',', ' ') }} Eur</span>
+                </p>
+                <p>
+                    <span><b>Dépenses :</b></span>
+                    <span>{{ totalExpense|number_format(2, ',', ' ') }} Eur</span>
+                </p>
+                <hr>
+                <p>
+                    <span><b>SOLDE :</b></span>
+                    {% set soldeFinClass = 'yearSolde-pos' %}
+                    {% set soldeFin = totalIncome - totalExpense %}
+                    {% if soldeFin < 0 %}
+                        {% set soldeFinClass = 'yearSolde-neg' %}
+                    {% endif %}
+                    <span class='{{ soldeFinClass }}'>{{ soldeFin|number_format(2, ',', ' ') }} Eur</span>
+                </p>
+            </section>
+        </a>
     </section>
 </div>
 {% endblock %}

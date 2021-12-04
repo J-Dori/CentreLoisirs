@@ -36,7 +36,7 @@
             </thead>
             <tbody>
                 {% for children in profile.children %}
-                <tr style="cursor:pointer" onclick="location.href='{{ path('children_index', {'id':children.id}) }}'">
+                <tr>
                     <td>{{ children }}</td>
                     <td class="text-center">{{ children.birthday|date("d-m-Y") }}</td>
                     <td class="text-center">{{ children.getAge }}</td>
@@ -54,7 +54,7 @@
                     {% endif %}
                 </tr>
                 {% else %}
-                    <tr colspan="4" class="text-center"><td><h5>Aucune donnée enregistrée...</h5></td></tr>
+                    <tr colspan="7" class="text-center"><td><h5>Aucune donnée enregistrée...</h5></td></tr>
                 {% endfor %}
             </tbody>
         </table>

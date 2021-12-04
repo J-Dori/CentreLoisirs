@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Financière{% endblock %}
+
+{% block pageTitle %}GESTION FINANCIÈRE {{ year }}{% endblock %}
+
+{% block body %}
+    {% set solde = totalIncome - totalExpense %}
+    {% set soldeClass = 'yearSolde-pos' %}
+    {% if solde < 0 %}
+        {% set soldeClass = 'yearSolde-neg' %}
+    {% endif %}
+
+    <section id="fin-solde" class="text-center">
+        <h3>SOLDE DE {{ year }} :&emsp;<span class="{{ soldeClass }}">{{ solde|number_format(2, ',', ' ') }} Eur</span></h3>
+    </section>
+    <section id="fin-expense">
+        <h3 class="text-center">DÉPENSES</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">Nº</th>
+                    <th>CATÉGORIE</th>
+                    <th class="text-center">DATE</th>
+                    <th class="text-center">MODE PAIEMENT</th>
+                    <th class="text-center">MONTANT</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('expense_add') }}"><i class="fas fa-plus text-white"></i></a></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in expenses %}    
+                <tr>
+                    <td class="text-center">{{ list.numExp }}</td>
+                    <td>{{ list.category.title }}</td>
+                    <td class="text-center finDate-tableWidth">{{ list.dateIn|date('d-m-Y') }}</td>
+                    <td class="text-center">{{ list.payMode }}</td>
+                    <td style="text-align:right">{{ list.amount|number_format(2, ',', ' ') }} Eur</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('expense_edit', {'id':list.id}) }}"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                        onclick="confirmDelete()" 
+                        data-text="{{ list.numExp }}"
+                        data-ctrl="la Recette nº" href="{{ path('expense_edit', {'id':list.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align:right;font-weight:600">{{ totalExpense|number_format(2, ',', ' ') }} Eur</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+    <section id="fin-income">
+        <h3 class="text-center">RECETTES</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">Nº</th>
+                    <th>CATÉGORIE</th>
+                    <th class="text-center finDate-tableWidth">DATE</th>
+                    <th class="text-center">MODE PAIEMENT</th>
+                    <th class="text-center">MONTANT</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <th class="text-center table-btn" style="width: 80px"><a class="btn btn-sm btn-primary btn-sm-add" title="Ajouter" href="{{ path('income_add') }}"><i class="fas fa-plus text-white"></i></a></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in incomes %}    
+                <tr>
+                    <td class="text-center">{{ list.numInc }}</td>
+                    <td>{{ list.category.title }}</td>
+                    <td class="text-center">{{ list.dateIn|date('d-m-Y') }}</td>
+                    <td class="text-center">{{ list.payMode }}</td>
+                    <td style="text-align:right">{{ list.amount|number_format(2, ',', ' ') }} Eur</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-warning btn-sm-edit" title="Modifier" href="{{ path('income_edit', {'id':list.id}) }}"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                        onclick="confirmDelete()" 
+                        data-text="{{ list.numInc }}"
+                        data-ctrl="la Recette nº" href="{{ path('income_edit', {'id':list.id}) }}"><i class="far fa-trash-alt text-white"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align:right;font-weight:600">{{ totalIncome|number_format(2, ',', ' ') }} Eur</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+    <a class="nav-link text-center w-100" href="{{ path('category_index') }}">Liste de Catégories</a>
+{% endblock %}

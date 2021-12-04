@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dépenses{% endblock %}
+
+{% block pageTitle %}DÉPENSES {{ year }}{% endblock %}
+
+{% block body %}
+<div class="wrapper m-auto col-xl-8 col-lg-10 col-md-12">
+    {{ form_start(form) }}
+        <div class="mt-2">
+            Dépense nº &ensp;{{ form_widget(form.numExp, {'attr': {'class': 'form-control text-center', 'style': 'width:50px'}}) }}
+        </div>
+        <div class="mt-2">
+            Catégorie &ensp;{{ form_widget(form.category, {'attr': {'class': 'form-select', 'style':'max-width:350px'}}) }}
+        </div>
+        <div class="mt-2">
+            Date &ensp;{{ form_widget(form.dateIn, {'attr': {'class': 'form-control text-center', 'style':'width:150px'}}) }}
+        </div>
+        <div class="mt-2">
+            Mode Paiement &ensp;{{ form_widget(form.payMode, {'attr': {'class': 'form-select', 'style': 'width:150px'}}) }}
+        </div>
+        <div class="mt-2">
+            Doc/Chèque nº &ensp;{{ form_widget(form.docNum, {'attr': {'class': 'form-control', 'style':'max-width:350px'}}) }}
+        </div>
+        <div class="mt-2">
+            Montant (Eur) &ensp;{{ form_widget(form.amount, {'attr': {'class': 'form-control formPrice', 'style':'width:120px'}}) }}
+        </div>
+        <div class="mt-2">
+            Notes &ensp;{{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows':'3', 'style': 'width:100%',}}) }}
+        </div>
+        <div class="form-error">
+            {{ form_errors(form) }}
+        </div>
+        <button class="btn btn-md btn-primary mt-3" type="submit">Enregistrer</button>
+        <a class="btn btn-md btn-danger mt-3" id="payment__cancelBtn" href="{{ path('financial_index') }}">Annuler</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
+

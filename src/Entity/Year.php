@@ -76,6 +76,16 @@ class Year
      */
     private $inscriptionDetails;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FinExpense::class, mappedBy="year", orphanRemoval=true)
+     */
+    private $finExpenses;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FinIncome::class, mappedBy="year", orphanRemoval=true)
+     */
+    private $finIncomes;
+
     public function __construct()
     {
         $this->animateurContracts = new ArrayCollection();
@@ -84,6 +94,8 @@ class Year
         $this->rates = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
         $this->inscriptionDetails = new ArrayCollection();
+        $this->finExpenses = new ArrayCollection();
+        $this->finIncomes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -325,6 +337,66 @@ class Year
             // set the owning side to null (unless already changed)
             if ($inscriptionDetail->getYear() === $this) {
                 $inscriptionDetail->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FinExpense[]
+     */
+    public function getFinExpenses(): Collection
+    {
+        return $this->finExpenses;
+    }
+
+    public function addFinExpense(FinExpense $finExpense): self
+    {
+        if (!$this->finExpenses->contains($finExpense)) {
+            $this->finExpenses[] = $finExpense;
+            $finExpense->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinExpense(FinExpense $finExpense): self
+    {
+        if ($this->finExpenses->removeElement($finExpense)) {
+            // set the owning side to null (unless already changed)
+            if ($finExpense->getYear() === $this) {
+                $finExpense->setYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FinIncome[]
+     */
+    public function getFinIncomes(): Collection
+    {
+        return $this->finIncomes;
+    }
+
+    public function addFinIncome(FinIncome $finIncome): self
+    {
+        if (!$this->finIncomes->contains($finIncome)) {
+            $this->finIncomes[] = $finIncome;
+            $finIncome->setYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinIncome(FinIncome $finIncome): self
+    {
+        if ($this->finIncomes->removeElement($finIncome)) {
+            // set the owning side to null (unless already changed)
+            if ($finIncome->getYear() === $this) {
+                $finIncome->setYear(null);
             }
         }
 

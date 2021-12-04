@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Week;
 use App\Entity\Year;
 use App\Entity\Payment;
+use App\Entity\FinIncome;
+use App\Entity\FinExpense;
 use App\Entity\Inscription;
 use App\Entity\InscriptionDetail;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +34,9 @@ class HomeController extends AbstractController
 
         $totalColumns = $manager->getRepository(Inscription::class)->getTotalByColumnByYear(['year' => $year->getId()]);
 
+        $totalIncome = $manager->getRepository(FinIncome::class)->totalByYear($year->getId());
+        $totalExpense = $manager->getRepository(FinExpense::class)->totalByYear($year->getId());
+
         if (!$year) {
             $this->addFlash('error', 'Il n\'y a aucune Session active. S\'il vous plait sélectionnez-en une.');
             return $this->redirectToRoute('session_index');
@@ -44,6 +49,8 @@ class HomeController extends AbstractController
                 'totalPaid' => $totalPaid['total'],
                 'totalExpected' => $totalExpected['total'],
             'totalColumns' => $totalColumns,
+            'totalIncome' => $totalIncome['total'],
+            'totalExpense' => $totalExpense['total'],
         ]);
     }
 }

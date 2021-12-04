@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block pageTitle %}CATÉGORIES{% endblock %}
+
+{% block body %}
+<a class="btn btn-lg btn-secondary mb-5" href="{{ path('financial_index') }}"><i class="fas fa-chevron-left text-white"></i>&emsp;Gestion Financière</a>
+<div class="wrapper m-auto col-md-8 col-sm-12 my-3">
+    <div id="category__form">
+        {% block formCategory %}{% endblock %}
+    </div>
+    <div id="category__table">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th class="text-center" style="width:50px">
+                        <a id="category__addBtt" class="btn btn-md btn-primary mt-3" href="{{ path('category_add') }}">Ajouter</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in categories %}    
+                <tr>
+                    <td>{{ list.title }}</td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-danger btn-sm-del" title="Supprimer"
+                            href="{{ path('category_del', {'id':list.id}) }}"><i class="far fa-trash-alt text-white"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            var addBtn = document.querySelector("#category__addBtt")
+            var cancelBtn = document.querySelector("#category__cancelBtn")
+            var categoryForm = document.querySelector("#category__form")                    
+            addBtn.addEventListener("click", () => {
+                categoryForm.style.display = 'flex'
+            });
+            cancelBtn.addEventListener("click", () => {
+                categoryForm.style.display = 'none'
+            });
+        });
+    </script>
+{% endblock %}

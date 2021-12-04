@@ -5,8 +5,9 @@
 {% block pageTitle %}{{ pageTitle }}{% endblock %}
 
 {% block body %}
+<a class="btn btn-lg btn-secondary mb-5" href="{{ path('inscription_index') }}"><i class="fas fa-chevron-left text-white"></i>&emsp;Liste</a>
+<a class="btn btn-lg btn-secondary mb-5" href="{{ path('inscription_edit', {'id':inscription.id}) }}"><i class="fas fa-chevron-left text-white"></i>&emsp;Inscription</a>
 <div class="wrapper m-auto col-lg-8 col-md-12 my-3">
-    <a class="btn btn-lg btn-secondary mb-5" href="{{ path('inscription_edit', {'id':inscription.id}) }}"><i class="fas fa-chevron-left text-white"></i>&emsp;Inscription</a>
     <div class="flex-justifyBetween">
         <div>
             <h3>Inscription nº {{ inscription.numInsc }}</h3>

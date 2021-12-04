@@ -160,9 +160,14 @@ class PeopleController extends AbstractController
      */
     public function children_addResponsable(Children $entity, Request $request, EntityManagerInterface $manager)
     {
-        if ($entity) {
+        $idResponsable = $request->query->get('responsable');
 
-            $idResponsable = $request->query->get('responsable');
+        if ($idResponsable == null) {
+            $this->addFlash("error", "Veuillez sélectionner un Responsable dans la liste");
+            return $this->redirectToRoute('children_profile', ['id' => $request->attributes->get('id')]);
+        }
+
+        if ($entity) {
             $obj = $this->getDoctrine()->getRepository(Responsable::class)->find($idResponsable);
             $entity->addResponsable($obj);
             $manager->flush();

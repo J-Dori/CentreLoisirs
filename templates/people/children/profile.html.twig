@@ -17,7 +17,7 @@
             <p><strong>Alimentaires : </strong>{{ profile.foodObs }}</p>
         </ul>
         {% if is_granted('ROLE_ADMIN') %}
-        <p><a class="btn btn-sm btn-warning btn-edit" href="{{ path('responsable_edit', {'id':profile.id, 'goBack':'children_profile'}) }}">Modifier</a></p>
+        <p><a class="btn btn-sm btn-warning btn-edit" href="{{ path('children_edit', {'id':profile.id, 'goBack':'children_profile'}) }}">Modifier</a></p>
         {% endif %}
     </div>
 
